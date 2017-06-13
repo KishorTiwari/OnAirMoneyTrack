@@ -10,19 +10,40 @@ using Omack.Data.Infrastructure;
 using Omack.Services.Services;
 using Microsoft.AspNetCore.Identity;
 using System.Threading;
+using Omack.Services.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Omac.Web.Controllers
 {
     public class HomeController : Controller
     {
+        private IItemService _itemService;
 
-        public HomeController() 
+        public HomeController(IItemService itemService)
         {
+            _itemService = itemService;
         }
-        
+
+        public ActionResult Demo(ItemServiceModel model)
+        {
+            var item = new ItemServiceModel
+            {
+                Name = "Milk",
+                Price = 15,
+                DateOfPurchase = DateTime.UtcNow,
+                ItemType = 1,
+                UserId = 1,
+                GroupId = 10,
+                MediaId = 1
+            };
+            _itemService.Add(item);
+            return Ok(item);
+        }
+
+        [Authorize]
         public IActionResult Index(int? Id)
         {
-            return Ok("What the fuck you want !!!");
+            return Ok("You're logged in");
         }
 
         public IActionResult About()

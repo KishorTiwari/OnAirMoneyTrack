@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Omack.Data.Infrastructure;
 using Omack.Data.Models;
 using Microsoft.AspNetCore.Identity;
+using Omack.Web.ViewModels;
 
 namespace Omack.Web.Controllers
 {
@@ -23,19 +24,36 @@ namespace Omack.Web.Controllers
         {
             return View();
         }
+        
+        public IActionResult Login()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return Ok("You're logged in");
+            }
+            else
+            {
+                return View();
+            }
+        }
+        public IActionResult Register()
+        {
+            return View();
+        }
 
-        public async Task<IActionResult> Register(string returnUrl)
+        [HttpPost]
+        public async Task<IActionResult> Register(UserViewModel userViewModel,string returnUrl)
         {
             //do user registration
-            if(await _userManager.FindByEmailAsync("bhupin@gmail.com") == null)
+            if (await _userManager.FindByEmailAsync(userViewModel.Email) == null)
             {
                 var user = new User()
                 {
-                    UserName = "Bhupin",
-                    Email = "bhupin@gmail.com",
+                    UserName = userViewModel.UserName,
+                    Email = userViewModel.Email  ,
                     MediaId = 1
                 };
-                await _userManager.CreateAsync(user, "P@ssw0rd!");
+                await _userManager.CreateAsync(user, userViewModel.Password);
                 return Ok(user);
             }
             return View(); //return View();

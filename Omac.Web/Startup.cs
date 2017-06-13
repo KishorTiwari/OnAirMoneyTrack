@@ -36,11 +36,15 @@ namespace Omac.Web
             services.AddIdentity<User, IdentityRole<int>>(config =>
             {
                 config.User.RequireUniqueEmail = true;
-                config.Password.RequiredLength = 8;
-                //config.Cookies.ApplicationCookie.LoginPath = "/"; //redirect use to this url if the user is not logged in
+                //config.Password.RequiredLength = 8;
+                config.Password.RequireNonAlphanumeric = false;
+                config.Password.RequireUppercase = false;
+                config.Cookies.ApplicationCookie.LoginPath = "/Account/Login";
+                //config.Cookies.ApplicationCookie.LoginPath = "/"; //redirect user to this url if the user is not logged in
             }).AddEntityFrameworkStores<OmackContext, int>();
-
             services.AddScoped<OmackContext>();
+            services.AddScoped<IItemService, ItemService>();   // ItemService:  IItemService,  OtherService:  IItemService
+            //services.AddScoped<ItemService>();
             //services.AddScoped<IItemService, ItemService>();  //Scoped - one object for all request from specific client.
             //services.AddScoped<IGroupService, GroupService>();
             services.AddScoped<UnitOfWork>();

@@ -33,7 +33,7 @@ namespace Omack.Data.Infrastructure
         }
         public TEntity GetById (int id)
         {
-            return dbSet.Find(id);
+            return dbSet.Find(id);  
         }   
         
         public void Add(TEntity entity)

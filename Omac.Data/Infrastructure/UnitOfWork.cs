@@ -9,11 +9,14 @@ namespace Omack.Data.Infrastructure
 {
     public class UnitOfWork : IDisposable
     {
-        private OmackContext context = new OmackContext();       
-        public GroupRepository groupRepository { get; set; }
-        public UnitOfWork()
+        private OmackContext _context;
+        public GroupRepository groupRepository;
+        public ItemRepository itemRepository { get; set; }
+        public UnitOfWork(OmackContext omackContext)
         {
-            groupRepository = new GroupRepository(context);
+            _context = omackContext;
+            groupRepository = new GroupRepository(_context);
+            itemRepository = new ItemRepository(_context);
             //if(this.itemRepository == null)
             //{
             //    itemRepository = new ItemRepository(context);
@@ -23,16 +26,17 @@ namespace Omack.Data.Infrastructure
         }
         public void Save()
         {
-            context.SaveChanges(); //save changes to the db.
+            _context.SaveChanges(); //save changes to the db.
         }
         private bool disposed = false;  //initially set disposed to false.
+
         void Dispose(bool disposing)
         {
             if (!this.disposed)
             {
                 if (disposing)
                 {
-                    context.Dispose();
+                    _context.Dispose();
                 }
             }
             this.disposed = true;   //changed it to true once it is disposed

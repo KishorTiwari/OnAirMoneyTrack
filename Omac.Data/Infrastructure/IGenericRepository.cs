@@ -14,8 +14,5 @@ namespace Omack.Data.Infrastructure
         void Add(TEntity entity);
         void Update(TEntity entity);
         void Delete(int Id);
-        //void Update(TEntity entity);
-        //void Delete(int id);
-        //void Delete(Expression<Func<TEntity, bool>> where);
     }
 }
