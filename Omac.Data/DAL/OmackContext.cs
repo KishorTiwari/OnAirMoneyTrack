@@ -10,7 +10,8 @@ namespace Omack.Data.DAL
 {
     public class OmackContext: IdentityDbContext<User, Role, int>
     {
-        public OmackContext()
+        //use dbcontextoption configured in startup.cs class
+        public OmackContext(DbContextOptions options): base(options)
         {
         }
         public DbSet<Group> Groups { get; set; } 
@@ -20,18 +21,19 @@ namespace Omack.Data.DAL
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(connectionString: "Data Source=DESKTOP-SDQNFF2\\SQLSERVER;Initial Catalog=Omack-Dev;Integrated Security=True");
-
-            //TODO: Use config file for connection string..
-            //TODO: Add Indentity User - using identity framework
-        }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            //give custom names for identity tables, <int>: change default string type to int for primary key
             builder.Entity<User>().ToTable("User");
             builder.Entity<Role>().ToTable("Role");
+            builder.Entity<IdentityUserClaim<int>>().ToTable("UserClaim");
+            builder.Entity<IdentityUserRole<int>>().ToTable("UserRole");
+            builder.Entity<IdentityUserLogin<int>>().ToTable("UserLogin");
+            builder.Entity<IdentityRoleClaim<int>>().ToTable("RoleClaim");
+            builder.Entity<IdentityUserToken<int>>().ToTable("UserToken");
+
         }
     }
 }

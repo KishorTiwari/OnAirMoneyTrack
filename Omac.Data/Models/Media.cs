@@ -11,8 +11,8 @@ namespace Omack.Data.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        [Required]
         public Guid Guid { get; set; }
+        public int TypeId { get; set; }
         public Boolean IsActive { get; set; }
 
         //System Properties  [Note: UpdatedBy & CreatedBy = Current Loggedin User ID]

@@ -23,7 +23,7 @@ namespace Omac.Web.Controllers
         public HomeController(IItemService itemService, UserManager<User> userManager)
         {
             _userManager = userManager;
-            _itemService = itemService;
+            _itemService = itemService;           
         }
 
         public ActionResult Demo(ItemServiceModel model)

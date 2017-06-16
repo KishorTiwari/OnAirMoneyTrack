@@ -1,6 +1,0 @@
-{
-  "ConnectionString": {
-    "Omack-Dev": "Data Source=DESKTOP-SDQNFF2\\SQLSERVER;Initial Catalog=Omack-Dev;Integrated Security=True",
-    "Omack-Production":  "Remote data source"
-  }
-}
