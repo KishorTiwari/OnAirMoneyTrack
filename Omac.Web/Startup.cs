@@ -33,7 +33,7 @@ namespace Omac.Web
         {
             // Add framework services.
             services.AddMvc();
-            services.AddIdentity<User, IdentityRole<int>>(config =>
+            services.AddIdentity<User, Role>(config =>
             {
                 config.User.RequireUniqueEmail = true;
                 //config.Password.RequiredLength = 8;

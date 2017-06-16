@@ -1,4 +1,4 @@
-@model Omack.Web.ViewModels.UserViewModel
+@model Omack.Web.ViewModels.UserLoginModel
 @{
     ViewData["Title"] = "Login";
     Layout = "~/Views/Shared/_LayoutLogin.cshtml";
@@ -9,6 +9,12 @@
     {
         @Html.ValidationSummary(true, null, new { @class = "text-danger"});
         <div class="form-horizontal">
+            <div class="form-group">
+                @Html.LabelFor(m => m.UserName, htmlAttributes: new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.UserName, htmlAttributes: new { @class = "form-control" })
+                </div>
+            </div>
             <div class="form-group">
                 @Html.LabelFor(m => m.Email, htmlAttributes: new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">

@@ -18,9 +18,11 @@ namespace Omac.Web.Controllers
     public class HomeController : Controller
     {
         private IItemService _itemService;
+        private UserManager<User> _userManager;
 
-        public HomeController(IItemService itemService)
+        public HomeController(IItemService itemService, UserManager<User> userManager)
         {
+            _userManager = userManager;
             _itemService = itemService;
         }
 
@@ -43,7 +45,8 @@ namespace Omac.Web.Controllers
         [Authorize]
         public IActionResult Index(int? Id)
         {
-            return Ok("You're logged in");
+            var currentUserName = _userManager.GetUserName(User);
+            return Ok($"Hi {currentUserName}. You're authorized to access this page. ");
         }
 
         public IActionResult About()
@@ -53,6 +56,7 @@ namespace Omac.Web.Controllers
             return View();
         }
 
+        [Authorize(Roles = "GroupAdmin")]
         public IActionResult Contact()
         {
             ViewData["Message"] = "Your contact page.";
