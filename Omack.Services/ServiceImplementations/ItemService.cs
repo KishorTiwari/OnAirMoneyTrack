@@ -30,8 +30,9 @@ namespace Omack.Services.ServiceImplementations
                 UserId = itemModel.UserId,
                 GroupId = itemModel.GroupId,
                 MediaId = itemModel.MediaId,
-                CreatedBy = 1
-                
+                CreatedBy = 1,
+                CreatedOn = DateTime.UtcNow,
+                IsActive = true              
             };
 
             _unitOfWork.itemRepository.Add(item);

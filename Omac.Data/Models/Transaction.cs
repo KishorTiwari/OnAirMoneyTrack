@@ -14,7 +14,7 @@ namespace Omack.Data.Models
         [Required]
         public decimal Amount { get; set; }
         [Required]
-        public int Type { get; set; } //[Private Or Public]
+        public int TypeId { get; set; } //[Private Or Public]
         public int? ReceiverId { get; set; }  
         public int? SenderId { get; set; }
         public Boolean  IsComplete { get; set; }

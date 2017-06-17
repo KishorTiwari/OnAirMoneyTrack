@@ -8,6 +8,7 @@ using Omack.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Omack.Web.ViewModels;
 using System.Security.Claims;
+using Omack.Core;
 
 namespace Omack.Web.Controllers
 {
@@ -87,7 +88,7 @@ namespace Omack.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(UserRegisterModel userRegisterModel, string returnUrl)
+        public async Task<IActionResult> Register(UserRegisterModel userRegisterModel,string returnUrl)
         {
             //do user registration
             if (await _userManager.FindByEmailAsync(userRegisterModel.Email) == null)
@@ -104,15 +105,22 @@ namespace Omack.Web.Controllers
             return View(); //return View();
         }
 
-        public async Task<IActionResult> MakeAdmin(string email)
+        public async Task<IActionResult> CreateRole(string email, string role)
         {
-            var role = new Role();
-            role.Name = "GroupAdmin";
-            await _roleManager.CreateAsync(role);  //create role
-            //var user = await _userManager.FindByEmailAsync(email);
-            //await _userManager.AddToRoleAsync(user, "Root");   //add to role
+            var newRole = new Role();
+            newRole.Name = role;
+            await _roleManager.CreateAsync(newRole);  //create role
+            var user = await _userManager.FindByEmailAsync(email);
+            await _userManager.AddToRoleAsync(user, role);   //add to role
             //await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, "Root"));
             return Ok("Changed to Admin");
+        }
+        public async Task<IActionResult> AssignRole(string email, string role)
+        {            
+            var user = await _userManager.FindByEmailAsync(email);
+            await _userManager.AddToRoleAsync(user, role);   //add to role
+            //await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, "Root"));
+            return Ok($"Changed to {role}" );
         }
     }
 }

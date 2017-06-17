@@ -14,12 +14,12 @@ namespace Omack.Data.DAL
         public OmackContext(DbContextOptions options): base(options)
         {
         }
-        public DbSet<Group> Groups { get; set; } 
+        public DbSet<Group> Group { get; set; } 
         public DbSet<Group_User> Group_User { get; set; }
-        public DbSet<Item> Items { get; set; }
-        public DbSet<Media> Medias { get; set; }
-        public DbSet<Notification> Notifications { get; set; }
-        public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<Item> Item { get; set; }
+        public DbSet<Media> Media { get; set; }
+        public DbSet<Notification> Notification { get; set; }
+        public DbSet<Transaction> Transaction { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
