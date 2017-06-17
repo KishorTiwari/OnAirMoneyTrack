@@ -17,9 +17,21 @@ namespace Omack.Web.Controllers
         {
             _userManager = userManager;
         }
-        public IActionResult Index()
+        public UserIdentityModel GetCurrentUser()
         {
-            return View();
+            var currentUser = GetCurrentUserAsync();
+            return currentUser.Result;
+        }
+        public async Task<UserIdentityModel> GetCurrentUserAsync()
+        {
+            var identityUser = await _userManager.GetUserAsync(User);
+            var currentUser = new UserIdentityModel
+            {
+                Id = identityUser.Id,
+                Name = identityUser.UserName,
+                Email = identityUser.Email
+            };
+            return currentUser;
         }
     }
 }

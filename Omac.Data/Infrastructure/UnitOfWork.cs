@@ -10,19 +10,35 @@ namespace Omack.Data.Infrastructure
     public class UnitOfWork : IDisposable
     {
         private OmackContext _context;
-        public GroupRepository groupRepository;
-        public ItemRepository itemRepository { get; set; }
+        private GroupRepository groupRepository;
+        private ItemRepository itemRepository;
         public UnitOfWork(OmackContext omackContext)
         {
             _context = omackContext;
-            groupRepository = new GroupRepository(_context);
-            itemRepository = new ItemRepository(_context);
-            //if(this.itemRepository == null)
-            //{
-            //    itemRepository = new ItemRepository(context);
-            //    this.groupRepository = new GroupRepository(context);
-
-            //}
+        }
+        //Group Repository
+        public GroupRepository GroupRepository
+        {
+            get
+            {
+                if (this.groupRepository == null)
+                {
+                    this.groupRepository = new GroupRepository(_context);
+                }
+                return groupRepository;
+            }
+        }
+        //Item Repository
+        public ItemRepository ItemRepository
+        {
+            get
+            {
+                if(this.itemRepository == null)
+                {
+                    this.itemRepository = new ItemRepository(_context);
+                }
+                return itemRepository;
+            }
         }
         public void Save()
         {
@@ -46,6 +62,6 @@ namespace Omack.Data.Infrastructure
         {
             Dispose(true); //call above method Dispose(bool disposing). Remember that method is valid because it has different methods. AKA overload methods.
             GC.SuppressFinalize(this);
-        }       
+        }
     }
 }

@@ -56,26 +56,35 @@ namespace Omack.Web.Controllers
             {
                 try
                 {
-                    var signInResult = await _signInManager.PasswordSignInAsync(userLoginModel.UserName, userLoginModel.Password, true, false); //sign in new user
-                    if (signInResult.Succeeded)
+                    var user = await _userManager.FindByEmailAsync(userLoginModel.Email);
+                    if (user == null)
                     {
-                        if (string.IsNullOrWhiteSpace(returnUrl))
-                        {
-                            return RedirectToAction("Index", "Home");
-                        }
-                        else
-                        {
-                            return Redirect(returnUrl);
-                        }
+                        ModelState.AddModelError(string.Empty, "Invalid Email.");
                     }
                     else
                     {
-                        ModelState.AddModelError("", "Invalid Email or Password.");
+                        var signIn = await _signInManager.PasswordSignInAsync(user.UserName, userLoginModel.Password, userLoginModel.RememberMe, false);
+                        if (!signIn.Succeeded)
+                        {
+                            ModelState.AddModelError(string.Empty, "Invalid Password");
+                            return View();
+                        }
+                        else
+                        {
+                            if (string.IsNullOrWhiteSpace(returnUrl))
+                            {
+                                return RedirectToAction("Index", "Home");
+                            }
+                            else
+                            {
+                                return Redirect(returnUrl);
+                            }
+                        }
                     }
                 }
                 catch (Exception e)
-                {
-                    var error = e;
+                {                   
+                    throw new Exception("Something went wrong while signing in user. Please contact adminstrator. Thank You");
                 }
 
             }
@@ -88,7 +97,7 @@ namespace Omack.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(UserRegisterModel userRegisterModel,string returnUrl)
+        public async Task<IActionResult> Register(UserRegisterModel userRegisterModel, string returnUrl)
         {
             //do user registration
             if (await _userManager.FindByEmailAsync(userRegisterModel.Email) == null)
@@ -116,11 +125,11 @@ namespace Omack.Web.Controllers
             return Ok("Changed to Admin");
         }
         public async Task<IActionResult> AssignRole(string email, string role)
-        {            
+        {
             var user = await _userManager.FindByEmailAsync(email);
             await _userManager.AddToRoleAsync(user, role);   //add to role
             //await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, "Root"));
-            return Ok($"Changed to {role}" );
+            return Ok($"Changed to {role}");
         }
     }
 }

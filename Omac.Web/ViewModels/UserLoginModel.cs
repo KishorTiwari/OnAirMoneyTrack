@@ -20,5 +20,7 @@ namespace Omack.Web.ViewModels
         [Display(Name = "Password")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+
+        public bool RememberMe { get; set; }
     }
 }

@@ -12,15 +12,16 @@ using Microsoft.AspNetCore.Identity;
 using System.Threading;
 using Omack.Services.Models;
 using Microsoft.AspNetCore.Authorization;
+using Omack.Web.Controllers;
 
 namespace Omac.Web.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private IItemService _itemService;
         private UserManager<User> _userManager;
 
-        public HomeController(IItemService itemService, UserManager<User> userManager)
+        public HomeController(IItemService itemService, UserManager<User> userManager): base(userManager)
         {
             _userManager = userManager;
             _itemService = itemService;            
@@ -45,8 +46,7 @@ namespace Omac.Web.Controllers
         [Authorize]
         public IActionResult Index(int? Id)
         {          
-            var currentUserName = _userManager.GetUserName(User);
-            return Ok($"Hi {currentUserName}. You're authorized to access this page. ");
+            return Ok(GetCurrentUser());
         }
 
         [Authorize(Roles = "administrator")]
