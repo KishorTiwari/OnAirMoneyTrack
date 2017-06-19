@@ -6,12 +6,14 @@ using Microsoft.AspNetCore.Mvc;
 using Omack.Web.ViewModels;
 using Omack.Data.Models;
 using Microsoft.AspNetCore.Identity;
+using Omack.Services.ServiceImplementations;
 
 namespace Omack.Web.Controllers
 {
     public class BaseController : Controller
     {
         private UserManager<User> _userManager;
+        private IdentityService _itemService;
 
         public BaseController(UserManager<User> userManager)
         {

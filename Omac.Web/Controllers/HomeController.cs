@@ -21,12 +21,11 @@ namespace Omac.Web.Controllers
         private IItemService _itemService;
         private UserManager<User> _userManager;
 
-        public HomeController(IItemService itemService, UserManager<User> userManager): base(userManager)
+        public HomeController(IItemService itemService, UserManager<User> userManager) : base(userManager)
         {
             _userManager = userManager;
-            _itemService = itemService;            
+            _itemService = itemService;
         }
-
         public ActionResult Demo(ItemServiceModel model)
         {
             var item = new ItemServiceModel
@@ -35,7 +34,7 @@ namespace Omac.Web.Controllers
                 Price = 15,
                 DateOfPurchase = DateTime.UtcNow,
                 ItemType = 1,
-                UserId = 1,
+                UserId = 2,
                 GroupId = 10,
                 MediaId = 1
             };
@@ -45,7 +44,7 @@ namespace Omac.Web.Controllers
 
         [Authorize]
         public IActionResult Index(int? Id)
-        {          
+        {
             return Ok(GetCurrentUser());
         }
 
@@ -57,17 +56,29 @@ namespace Omac.Web.Controllers
             return View();
         }
 
-        [Authorize(Roles = "administrator,root")]
+        //[Authorize(Roles = "administrator,root")]
+        [Authorize(Policy = "ViewContact")]
         public IActionResult Contact()
         {
             ViewData["Message"] = "Your contact page.";
-
             return View();
         }
 
         public IActionResult Error()
         {
             return View();
+        }
+
+        [Authorize(Policy = "IsAdmin")]
+        public IActionResult AdminPage()
+        {
+            return Ok("Admin Page");
+        }
+
+        [Authorize(Policy = "IsAdmin")]
+        public IActionResult BadPage()
+        {
+            return Ok("Some bad stuff. Only 18 plus are able to see this page");
         }
     }
 }

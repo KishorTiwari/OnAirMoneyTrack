@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Omac.Data\Omack.Data.csproj" />
+    <ProjectReference Include="..\Omack.Services\Omack.Services.csproj" />
   </ItemGroup>
 
 </Project>

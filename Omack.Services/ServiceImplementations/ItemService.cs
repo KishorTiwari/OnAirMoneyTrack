@@ -35,7 +35,7 @@ namespace Omack.Services.ServiceImplementations
                 IsActive = true              
             };
 
-            _unitOfWork.itemRepository.Add(item);
+            _unitOfWork.ItemRepository.Add(item);
             _unitOfWork.Save();
         }
 

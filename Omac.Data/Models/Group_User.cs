@@ -14,6 +14,7 @@ namespace Omack.Data.Models
         public int GroupId { get; set; }
         public int UserId { get; set; }
         public Boolean IsActive { get; set; }
+        public Boolean IsAdmin { get; set; }
 
         //Navigation Properties
         public Group Group { get; set; }

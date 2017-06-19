@@ -14,6 +14,9 @@ using Omack.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Omack.Data.DAL;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
+using Omack.Core.Authorization;
 
 namespace Omac.Web
 {
@@ -44,11 +47,29 @@ namespace Omac.Web
                 config.Password.RequireUppercase = false;
                 //redirect user to this url if the user is not logged in
                 config.Cookies.ApplicationCookie.LoginPath = "/Account/Login";
-
+                config.Cookies.ApplicationCookie.AccessDeniedPath = "/Account/AccessDenied";
+                config.Cookies.ApplicationCookie.AutomaticAuthenticate = true; //bring in identity from the cookie
+                config.Cookies.ApplicationCookie.AutomaticChallenge = true; // resolve 401 403 status codes to page specified above.
+                config.Cookies.ApplicationCookie.AuthenticationScheme = "Cookie";
             }).AddEntityFrameworkStores<OmackContext, int>();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("ViewContact", policy =>
+                {
+                    policy.RequireClaim("ViewContact", "View Contact");
+                });
+                options.AddPolicy("IsAdmin", policy =>
+                {
+                    policy.Requirements.Add(new IsGroupAdmin());
+                    policy.RequireClaim("IsAdmin", "Group");
+                });
+                //options.AddPolicy("Over18", policy => policy.Requirements.Add());
+            });
             services.AddDbContext<OmackContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("OmackDev")));
             //Scoped - one object for all request from specific client.
             // ItemService:  IItemService,  OtherService:  IItemService 
+            services.AddSingleton<UserService>();
+            services.AddSingleton<IAuthorizationHandler, IsGroupAdminHandler>();
             services.AddScoped<IItemService, ItemService>();
             services.AddScoped<UnitOfWork>();
         }
@@ -66,8 +87,8 @@ namespace Omac.Web
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-            app.UseStaticFiles();
             app.UseIdentity();
+            app.UseStaticFiles();            
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
