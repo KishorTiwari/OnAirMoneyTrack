@@ -8,9 +8,10 @@ using Omack.Data.DAL;
 namespace Omack.Data.Migrations
 {
     [DbContext(typeof(OmackContext))]
-    partial class OmackContextModelSnapshot : ModelSnapshot
+    [Migration("20170620020928_Nav property to User Class and TestProperty to Item class")]
+    partial class NavpropertytoUserClassandTestPropertytoItemclass
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
@@ -186,6 +187,8 @@ namespace Omack.Data.Migrations
 
                     b.Property<decimal>("Price")
                         .HasMaxLength(50);
+
+                    b.Property<int>("TestProperty");
 
                     b.Property<int?>("UpdatedBy");
 

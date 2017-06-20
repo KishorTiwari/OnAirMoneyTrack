@@ -13,6 +13,7 @@ using System.Threading;
 using Omack.Services.Models;
 using Microsoft.AspNetCore.Authorization;
 using Omack.Web.Controllers;
+using Microsoft.AspNetCore.Http;
 
 namespace Omac.Web.Controllers
 {
@@ -45,7 +46,11 @@ namespace Omac.Web.Controllers
         [Authorize]
         public IActionResult Index(int? Id)
         {
-            return Ok(GetCurrentUser());
+            var cookies = Request.Cookies;
+
+            var claims = HttpContext.User.Claims;
+
+            return Ok(claims);
         }
 
         [Authorize(Roles = "administrator")]
@@ -79,6 +84,18 @@ namespace Omac.Web.Controllers
         public IActionResult BadPage()
         {
             return Ok("Some bad stuff. Only 18 plus are able to see this page");
+        }
+
+        public IActionResult WriteCookies(string name, string value, bool isPersistent)
+        {
+            if (isPersistent)
+            {
+                var opt = new CookieOptions();
+                opt.Expires = DateTime.UtcNow.AddMinutes(60);
+                Response.Cookies.Append(name, value, opt);
+            }
+            var cookieAddress = Request.Cookies["address"];
+            return Ok($"Cookie stored. Value is: {cookieAddress}");
         }
     }
 }

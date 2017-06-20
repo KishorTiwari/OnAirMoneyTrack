@@ -68,7 +68,7 @@ namespace Omack.Web.Controllers
                         ModelState.AddModelError(string.Empty, "Invalid Email.");
                     }
                     else
-                    {
+                    {                       
                         var signIn = await _signInManager.PasswordSignInAsync(user.UserName, userLoginModel.Password, userLoginModel.RememberMe, false);
                         if (!signIn.Succeeded)
                         {
@@ -125,6 +125,11 @@ namespace Omack.Web.Controllers
             return View(); //return View();
         }
 
+        public IActionResult SelectGroup()
+        {
+           // var groups = 
+            return View();
+        }
         public async Task<IActionResult> CreateRole(string email, string role)
         {
             var newRole = new Role();

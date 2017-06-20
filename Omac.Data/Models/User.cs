@@ -12,6 +12,7 @@ namespace Omack.Data.Models
         //Navigation Properties
         public Media Media { get; set; }
 
+        public ICollection<Group_User> Group_Users { get; set; }
         //System Properties  [Note: UpdatedBy & CreatedBy = Current Loggedin User ID]
         public DateTime? CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }

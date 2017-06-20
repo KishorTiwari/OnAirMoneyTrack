@@ -6,6 +6,7 @@ using Omack.Data.Models;
 using System.Linq.Expressions;
 using Omack.Data.Infrastructure;
 using Omack.Services.Models;
+using System.Linq;
 
 namespace Omack.Services.ServiceImplementations
 {
@@ -29,13 +30,14 @@ namespace Omack.Services.ServiceImplementations
             throw new NotImplementedException();
         }
 
-        public IEnumerable<GroupServiceModel> GetAll()
+        public IQueryable<GroupServiceModel> GetAll()
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<GroupServiceModel> GetAll(Expression<Func<GroupServiceModel, bool>> where)
+        public IQueryable<GroupServiceModel> GetAll(Expression<Func<GroupServiceModel, bool>> where)
         {
+            // return _unitOfWork.GroupRepository.GetAll(where);
             throw new NotImplementedException();
         }
 

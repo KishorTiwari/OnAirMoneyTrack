@@ -49,8 +49,8 @@ namespace Omac.Web
                 config.Cookies.ApplicationCookie.LoginPath = "/Account/Login";
                 config.Cookies.ApplicationCookie.AccessDeniedPath = "/Account/AccessDenied";
                 config.Cookies.ApplicationCookie.AutomaticAuthenticate = true; //bring in identity from the cookie
-                config.Cookies.ApplicationCookie.AutomaticChallenge = true; // resolve 401 403 status codes to page specified above.
-                config.Cookies.ApplicationCookie.AuthenticationScheme = "Cookie";
+                config.Cookies.ApplicationCookie.AutomaticChallenge = true; // resolve 401 403 status codes to page specified above.  
+                config.Cookies.ApplicationCookie.ExpireTimeSpan = new TimeSpan(1,0,0);
             }).AddEntityFrameworkStores<OmackContext, int>();
             services.AddAuthorization(options =>
             {

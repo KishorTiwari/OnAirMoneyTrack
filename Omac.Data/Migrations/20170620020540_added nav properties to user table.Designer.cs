@@ -8,9 +8,10 @@ using Omack.Data.DAL;
 namespace Omack.Data.Migrations
 {
     [DbContext(typeof(OmackContext))]
-    partial class OmackContextModelSnapshot : ModelSnapshot
+    [Migration("20170620020540_added nav properties to user table")]
+    partial class addednavpropertiestousertable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
@@ -450,7 +451,7 @@ namespace Omack.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Omack.Data.Models.User", "User")
-                        .WithMany("Group_Users")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
