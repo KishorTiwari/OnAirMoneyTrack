@@ -20,7 +20,7 @@ namespace Omack.Data.Models
 
         //Nav properties
         public virtual Media Media { get; set; }
-
+        public ICollection<User> Users { get; set; }
         //System Properties  [Note: UpdatedBy & CreatedBy = Current Loggedin User ID]
         public DateTime? CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }

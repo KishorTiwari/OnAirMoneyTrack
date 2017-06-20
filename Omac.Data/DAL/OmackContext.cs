@@ -34,6 +34,7 @@ namespace Omack.Data.DAL
             builder.Entity<IdentityRoleClaim<int>>().ToTable("RoleClaim");
             builder.Entity<IdentityUserToken<int>>().ToTable("UserToken");
 
+
         }
     }
 }

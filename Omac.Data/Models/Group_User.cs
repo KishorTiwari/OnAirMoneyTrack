@@ -17,7 +17,6 @@ namespace Omack.Data.Models
         public Boolean IsAdmin { get; set; }
 
         //Navigation Properties
-        public Group Group { get; set; }
         public User User { get; set; }
 
         //System Properties  [Note: UpdatedBy & CreatedBy = Current Loggedin User ID]
