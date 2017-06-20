@@ -120,13 +120,9 @@ namespace Omack.Data.Migrations
 
                     b.Property<DateTime?>("UpdatedOn");
 
-                    b.Property<int?>("UserId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("MediaId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Group");
                 });
@@ -436,16 +432,12 @@ namespace Omack.Data.Migrations
                         .WithMany()
                         .HasForeignKey("MediaId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Omack.Data.Models.User")
-                        .WithMany("Groups")
-                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Omack.Data.Models.Group_User", b =>
                 {
                     b.HasOne("Omack.Data.Models.Group", "Group")
-                        .WithMany()
+                        .WithMany("Group_Users")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade);
 

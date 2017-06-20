@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Omack.Data.Infrastructure.Repositories
 {
-    public class GroupRepository : GenericRepository<Group>//, IGroupRepository
+    public class GroupRepository : GenericRepository<Group>, IGroupRepository
     {
         private OmackContext _context;
 
@@ -19,18 +19,13 @@ namespace Omack.Data.Infrastructure.Repositories
 
         public IQueryable<User> GetAllUsers(int groupId)
         {
-            //var users = _context.Group_User.Where(x => x.GroupId == groupId && x.IsActive);
-            //var users = _context.Users.Include(x=>x.gro).Where(x => x.GroupId == groupId && x.IsActive);
-            var users = _context.Group_User.Include(x => x.Group).Where(x => x.User.Id == 0);
-            //r users = _context.Users.Include(x=>x.Group_Users).Where(x=>x.Group_Users.
-            // userss = _context.Users.Include(x=>x.Group_Users).Where(x=>x.Group_Users.)
-           // var userss = _context.Users.Include(x => x.Group_Users).Where(x => x.Group_Users);
-            return null;
+            var users = _context.Users.Where(x => x.Group_Users.All(y=>y.GroupId == groupId));
+            return users;
         }
     }
 
     public interface IGroupRepository : IGenericRepository<Group>
     {
-        IQueryable<User> GetAllUsers();
+        IQueryable<User> GetAllUsers(int groupId);
     }
 }

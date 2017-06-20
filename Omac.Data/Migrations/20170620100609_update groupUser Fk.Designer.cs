@@ -8,8 +8,8 @@ using Omack.Data.DAL;
 namespace Omack.Data.Migrations
 {
     [DbContext(typeof(OmackContext))]
-    [Migration("20170620020928_Nav property to User Class and TestProperty to Item class")]
-    partial class NavpropertytoUserClassandTestPropertytoItemclass
+    [Migration("20170620100609_update groupUser Fk")]
+    partial class updategroupUserFk
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -121,13 +121,9 @@ namespace Omack.Data.Migrations
 
                     b.Property<DateTime?>("UpdatedOn");
 
-                    b.Property<int?>("UserId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("MediaId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Group");
                 });
@@ -187,8 +183,6 @@ namespace Omack.Data.Migrations
 
                     b.Property<decimal>("Price")
                         .HasMaxLength(50);
-
-                    b.Property<int>("TestProperty");
 
                     b.Property<int?>("UpdatedBy");
 
@@ -439,16 +433,12 @@ namespace Omack.Data.Migrations
                         .WithMany()
                         .HasForeignKey("MediaId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Omack.Data.Models.User")
-                        .WithMany("Groups")
-                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Omack.Data.Models.Group_User", b =>
                 {
                     b.HasOne("Omack.Data.Models.Group", "Group")
-                        .WithMany()
+                        .WithMany("Group_Users")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade);
 

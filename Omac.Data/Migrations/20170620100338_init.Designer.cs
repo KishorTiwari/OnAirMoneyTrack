@@ -8,8 +8,8 @@ using Omack.Data.DAL;
 namespace Omack.Data.Migrations
 {
     [DbContext(typeof(OmackContext))]
-    [Migration("20170616023406_Initial")]
-    partial class Initial
+    [Migration("20170620100338_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -125,7 +125,7 @@ namespace Omack.Data.Migrations
 
                     b.HasIndex("MediaId");
 
-                    b.ToTable("Groups");
+                    b.ToTable("Group");
                 });
 
             modelBuilder.Entity("Omack.Data.Models.Group_User", b =>
@@ -141,11 +141,15 @@ namespace Omack.Data.Migrations
 
                     b.Property<bool>("IsActive");
 
+                    b.Property<bool>("IsAdmin");
+
                     b.Property<int?>("UpdatedBy");
 
                     b.Property<DateTime?>("UpdatedOn");
 
-                    b.Property<int>("UserId");
+                    b.Property<int?>("UserId");
+
+                    b.Property<int>("testId");
 
                     b.HasKey("Id");
 
@@ -196,7 +200,7 @@ namespace Omack.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Items");
+                    b.ToTable("Item");
                 });
 
             modelBuilder.Entity("Omack.Data.Models.Media", b =>
@@ -218,9 +222,11 @@ namespace Omack.Data.Migrations
 
                     b.Property<DateTime?>("UpdatedOn");
 
+                    b.Property<string>("Url");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Medias");
+                    b.ToTable("Media");
                 });
 
             modelBuilder.Entity("Omack.Data.Models.Notification", b =>
@@ -252,7 +258,7 @@ namespace Omack.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Notifications");
+                    b.ToTable("Notification");
                 });
 
             modelBuilder.Entity("Omack.Data.Models.Role", b =>
@@ -307,7 +313,7 @@ namespace Omack.Data.Migrations
 
                     b.Property<int?>("SenderId");
 
-                    b.Property<int>("Type");
+                    b.Property<int>("TypeId");
 
                     b.Property<int?>("UpdatedBy");
 
@@ -321,7 +327,7 @@ namespace Omack.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Transactions");
+                    b.ToTable("Transaction");
                 });
 
             modelBuilder.Entity("Omack.Data.Models.User", b =>
@@ -434,14 +440,13 @@ namespace Omack.Data.Migrations
             modelBuilder.Entity("Omack.Data.Models.Group_User", b =>
                 {
                     b.HasOne("Omack.Data.Models.Group", "Group")
-                        .WithMany()
+                        .WithMany("Group_Users")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Omack.Data.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .WithMany("Group_Users")
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Omack.Data.Models.Item", b =>
