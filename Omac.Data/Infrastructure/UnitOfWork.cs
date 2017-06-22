@@ -12,6 +12,7 @@ namespace Omack.Data.Infrastructure
         private OmackContext _context;
         private GroupRepository groupRepository;
         private ItemRepository itemRepository;
+        private TransactionRepository transactionRepository;
         public UnitOfWork(OmackContext omackContext)
         {
             _context = omackContext;
@@ -33,11 +34,22 @@ namespace Omack.Data.Infrastructure
         {
             get
             {
-                if(this.itemRepository == null)
+                if (this.itemRepository == null)
                 {
                     this.itemRepository = new ItemRepository(_context);
                 }
                 return itemRepository;
+            }
+        }
+        public TransactionRepository TransactionRepository
+        {
+            get
+            {
+                if(this.transactionRepository == null)
+                {
+                    this.transactionRepository = new TransactionRepository(_context);
+                }
+                return transactionRepository;
             }
         }
         public void Save()
@@ -45,6 +57,7 @@ namespace Omack.Data.Infrastructure
             _context.SaveChanges(); //save changes to the db.
         }
         private bool disposed = false;  //initially set disposed to false.
+
 
         void Dispose(bool disposing)
         {

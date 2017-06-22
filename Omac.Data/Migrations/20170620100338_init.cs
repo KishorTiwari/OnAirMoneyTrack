@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Omack.Data.Migrations
 {
-    public partial class Initial : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -24,7 +24,7 @@ namespace Omack.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Medias",
+                name: "Media",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -35,11 +35,12 @@ namespace Omack.Data.Migrations
                     IsActive = table.Column<bool>(nullable: false),
                     TypeId = table.Column<int>(nullable: false),
                     UpdatedBy = table.Column<int>(nullable: true),
-                    UpdatedOn = table.Column<DateTime>(nullable: true)
+                    UpdatedOn = table.Column<DateTime>(nullable: true),
+                    Url = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Medias", x => x.Id);
+                    table.PrimaryKey("PK_Media", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -62,7 +63,7 @@ namespace Omack.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Groups",
+                name: "Group",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -78,11 +79,11 @@ namespace Omack.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Groups", x => x.Id);
+                    table.PrimaryKey("PK_Group", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Groups_Medias_MediaId",
+                        name: "FK_Group_Media_MediaId",
                         column: x => x.MediaId,
-                        principalTable: "Medias",
+                        principalTable: "Media",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.NoAction);
                 });
@@ -117,9 +118,9 @@ namespace Omack.Data.Migrations
                 {
                     table.PrimaryKey("PK_User", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_User_Medias_MediaId",
+                        name: "FK_User_Media_MediaId",
                         column: x => x.MediaId,
-                        principalTable: "Medias",
+                        principalTable: "Media",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.NoAction);
                 });
@@ -220,17 +221,19 @@ namespace Omack.Data.Migrations
                     CreatedOn = table.Column<DateTime>(nullable: true),
                     GroupId = table.Column<int>(nullable: false),
                     IsActive = table.Column<bool>(nullable: false),
+                    IsAdmin = table.Column<bool>(nullable: false),
                     UpdatedBy = table.Column<int>(nullable: true),
                     UpdatedOn = table.Column<DateTime>(nullable: true),
-                    UserId = table.Column<int>(nullable: false)
+                    UserId = table.Column<int>(nullable: true),
+                    testId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Group_User", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Group_User_Groups_GroupId",
+                        name: "FK_Group_User_Group_GroupId",
                         column: x => x.GroupId,
-                        principalTable: "Groups",
+                        principalTable: "Group",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
@@ -238,11 +241,11 @@ namespace Omack.Data.Migrations
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Items",
+                name: "Item",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -262,21 +265,21 @@ namespace Omack.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Items", x => x.Id);
+                    table.PrimaryKey("PK_Item", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Items_Groups_GroupId",
+                        name: "FK_Item_Group_GroupId",
                         column: x => x.GroupId,
-                        principalTable: "Groups",
+                        principalTable: "Group",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
-                        name: "FK_Items_Medias_MediaId",
+                        name: "FK_Item_Media_MediaId",
                         column: x => x.MediaId,
-                        principalTable: "Medias",
+                        principalTable: "Media",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
-                        name: "FK_Items_User_UserId",
+                        name: "FK_Item_User_UserId",
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id",
@@ -284,7 +287,7 @@ namespace Omack.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Notifications",
+                name: "Notification",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -300,15 +303,15 @@ namespace Omack.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Notifications", x => x.Id);
+                    table.PrimaryKey("PK_Notification", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Notifications_Groups_GroupId",
+                        name: "FK_Notification_Group_GroupId",
                         column: x => x.GroupId,
-                        principalTable: "Groups",
+                        principalTable: "Group",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
-                        name: "FK_Notifications_User_UserId",
+                        name: "FK_Notification_User_UserId",
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id",
@@ -316,7 +319,7 @@ namespace Omack.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Transactions",
+                name: "Transaction",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -329,22 +332,22 @@ namespace Omack.Data.Migrations
                     IsComplete = table.Column<bool>(nullable: false),
                     ReceiverId = table.Column<int>(nullable: true),
                     SenderId = table.Column<int>(nullable: true),
-                    Type = table.Column<int>(nullable: false),
+                    TypeId = table.Column<int>(nullable: false),
                     UpdatedBy = table.Column<int>(nullable: true),
                     UpdatedOn = table.Column<DateTime>(nullable: true),
                     UserId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Transactions", x => x.Id);
+                    table.PrimaryKey("PK_Transaction", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Transactions_Groups_GroupId",
+                        name: "FK_Transaction_Group_GroupId",
                         column: x => x.GroupId,
-                        principalTable: "Groups",
+                        principalTable: "Group",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
-                        name: "FK_Transactions_User_UserId",
+                        name: "FK_Transaction_User_UserId",
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id",
@@ -372,8 +375,8 @@ namespace Omack.Data.Migrations
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Groups_MediaId",
-                table: "Groups",
+                name: "IX_Group_MediaId",
+                table: "Group",
                 column: "MediaId");
 
             migrationBuilder.CreateIndex(
@@ -387,28 +390,28 @@ namespace Omack.Data.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Items_GroupId",
-                table: "Items",
+                name: "IX_Item_GroupId",
+                table: "Item",
                 column: "GroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Items_MediaId",
-                table: "Items",
+                name: "IX_Item_MediaId",
+                table: "Item",
                 column: "MediaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Items_UserId",
-                table: "Items",
+                name: "IX_Item_UserId",
+                table: "Item",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Notifications_GroupId",
-                table: "Notifications",
+                name: "IX_Notification_GroupId",
+                table: "Notification",
                 column: "GroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Notifications_UserId",
-                table: "Notifications",
+                name: "IX_Notification_UserId",
+                table: "Notification",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -418,13 +421,13 @@ namespace Omack.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transactions_GroupId",
-                table: "Transactions",
+                name: "IX_Transaction_GroupId",
+                table: "Transaction",
                 column: "GroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transactions_UserId",
-                table: "Transactions",
+                name: "IX_Transaction_UserId",
+                table: "Transaction",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -465,25 +468,25 @@ namespace Omack.Data.Migrations
                 name: "Group_User");
 
             migrationBuilder.DropTable(
-                name: "Items");
+                name: "Item");
 
             migrationBuilder.DropTable(
-                name: "Notifications");
+                name: "Notification");
 
             migrationBuilder.DropTable(
-                name: "Transactions");
+                name: "Transaction");
 
             migrationBuilder.DropTable(
                 name: "Role");
 
             migrationBuilder.DropTable(
-                name: "Groups");
+                name: "Group");
 
             migrationBuilder.DropTable(
                 name: "User");
 
             migrationBuilder.DropTable(
-                name: "Medias");
+                name: "Media");
         }
     }
 }

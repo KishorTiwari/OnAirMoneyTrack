@@ -30,7 +30,7 @@ namespace Omack.Services.ServiceImplementations
         } 
         public bool IsAdmin()
         {
-            var userId = _userManager.GetUserAsync(_context.HttpContext.User);
+            var userId = Convert.ToInt32(_userManager.GetUserId(_context.HttpContext.User));
             var isAdmin = _dbContext.Group_User.Where(x => x.UserId == _currentUser.Id && x.GroupId == 2 && x.IsAdmin && x.IsActive).Any();
             if (isAdmin)
             {

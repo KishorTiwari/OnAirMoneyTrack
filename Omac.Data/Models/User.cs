@@ -7,10 +7,12 @@ namespace Omack.Data.Models
 {
     public class User : IdentityUser<int>
     {
+        //Foreign Keys
         public int MediaId {get; set;}
 
-        //Navigation Properties
+        //Nav properties
         public Media Media { get; set; }
+        public ICollection<Group_User> Group_Users { get; set; }
 
         //System Properties  [Note: UpdatedBy & CreatedBy = Current Loggedin User ID]
         public DateTime? CreatedOn { get; set; }

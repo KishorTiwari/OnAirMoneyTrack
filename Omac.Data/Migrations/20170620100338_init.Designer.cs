@@ -8,8 +8,8 @@ using Omack.Data.DAL;
 namespace Omack.Data.Migrations
 {
     [DbContext(typeof(OmackContext))]
-    [Migration("20170616023941_changed table names to singular")]
-    partial class changedtablenamestosingular
+    [Migration("20170620100338_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -141,11 +141,15 @@ namespace Omack.Data.Migrations
 
                     b.Property<bool>("IsActive");
 
+                    b.Property<bool>("IsAdmin");
+
                     b.Property<int?>("UpdatedBy");
 
                     b.Property<DateTime?>("UpdatedOn");
 
-                    b.Property<int>("UserId");
+                    b.Property<int?>("UserId");
+
+                    b.Property<int>("testId");
 
                     b.HasKey("Id");
 
@@ -217,6 +221,8 @@ namespace Omack.Data.Migrations
                     b.Property<int?>("UpdatedBy");
 
                     b.Property<DateTime?>("UpdatedOn");
+
+                    b.Property<string>("Url");
 
                     b.HasKey("Id");
 
@@ -307,7 +313,7 @@ namespace Omack.Data.Migrations
 
                     b.Property<int?>("SenderId");
 
-                    b.Property<int>("Type");
+                    b.Property<int>("TypeId");
 
                     b.Property<int?>("UpdatedBy");
 
@@ -434,14 +440,13 @@ namespace Omack.Data.Migrations
             modelBuilder.Entity("Omack.Data.Models.Group_User", b =>
                 {
                     b.HasOne("Omack.Data.Models.Group", "Group")
-                        .WithMany()
+                        .WithMany("Group_Users")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Omack.Data.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .WithMany("Group_Users")
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Omack.Data.Models.Item", b =>

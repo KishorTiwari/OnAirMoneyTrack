@@ -437,12 +437,12 @@ namespace Omack.Data.Migrations
             modelBuilder.Entity("Omack.Data.Models.Group_User", b =>
                 {
                     b.HasOne("Omack.Data.Models.Group", "Group")
-                        .WithMany()
+                        .WithMany("Group_Users")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Omack.Data.Models.User", "User")
-                        .WithMany()
+                        .WithMany("Group_Users")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
