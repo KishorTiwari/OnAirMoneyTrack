@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Omack.Core.Authorization
+namespace Omack.Web.Authorization
 {
-    public class IsGroupAdmin: IAuthorizationRequirement
+    public class IsGroupAdmin : IAuthorizationRequirement
     {
         public IsGroupAdmin()
         {

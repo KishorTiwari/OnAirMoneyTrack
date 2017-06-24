@@ -8,7 +8,7 @@ namespace Omack.Data.Models
     public class User : IdentityUser<int>
     {
         //Foreign Keys
-        public int MediaId {get; set;}
+        public int? MediaId {get; set;}
 
         //Nav properties
         public Media Media { get; set; }

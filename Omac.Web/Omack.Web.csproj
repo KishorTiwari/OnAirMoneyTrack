@@ -30,5 +30,9 @@
     <ProjectReference Include="..\Omack.Core\Omack.Core.csproj" />
     <ProjectReference Include="..\Omack.Services\Omack.Services.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Views\Group\" />
+    <Folder Include="Views\Group\" />
+  </ItemGroup>
 
 </Project>

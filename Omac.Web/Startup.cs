@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Omack.Data.DAL;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
-using Omack.Core.Authorization;
+using Omack.Web.Authorization;
 
 namespace Omac.Web
 {
@@ -54,14 +54,11 @@ namespace Omac.Web
             }).AddEntityFrameworkStores<OmackContext, int>();
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("ViewContact", policy =>
-                {
-                    policy.RequireClaim("ViewContact", "View Contact");
-                });
-                options.AddPolicy("IsAdmin", policy =>
+ 
+                options.AddPolicy("Admin", policy =>
                 {
                     policy.Requirements.Add(new IsGroupAdmin());
-                    policy.RequireClaim("IsAdmin", "Group");
+                    policy.RequireClaim("Admin", "Admin");
                 });
                 //options.AddPolicy("Over18", policy => policy.Requirements.Add());
             });
@@ -69,6 +66,7 @@ namespace Omac.Web
             //Scoped - one object for all request from specific client.
             // ItemService:  IItemService,  OtherService:  IItemService 
             services.AddSingleton<UserService>();
+
             services.AddSingleton<IAuthorizationHandler, IsGroupAdminHandler>();
             services.AddScoped<IItemService, ItemService>();
             services.AddScoped<UnitOfWork>();

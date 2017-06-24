@@ -1,14 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Omack.Data.DAL;
 using Omack.Services.ServiceImplementations;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 
-namespace Omack.Core.Authorization
+namespace Omack.Web.Authorization
 {
-    public class IsGroupAdminHandler: AuthorizationHandler<IsGroupAdmin>
+    public class IsGroupAdminHandler : AuthorizationHandler<IsGroupAdmin>
     {
         private UserService _userService;
 
@@ -25,7 +24,7 @@ namespace Omack.Core.Authorization
             }
             else
             {
-                 context.Succeed(requirement);
+                context.Succeed(requirement);
             }
             return Task.CompletedTask;
         }

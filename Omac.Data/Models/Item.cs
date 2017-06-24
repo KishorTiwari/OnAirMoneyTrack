@@ -25,7 +25,7 @@ namespace Omack.Data.Models
         //Foreign Keys
         public int UserId { get; set; }
         public int GroupId { get; set; }
-        public int MediaId { get; set; }
+        public int? MediaId { get; set; }
        
         //Navigation Properties
         public Group Group { get; set; }

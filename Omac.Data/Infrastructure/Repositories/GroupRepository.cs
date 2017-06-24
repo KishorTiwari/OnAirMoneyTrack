@@ -16,8 +16,13 @@ namespace Omack.Data.Infrastructure.Repositories
         {
             _context = context;
         }
+        public IQueryable<Group> GetAllGroupsByUserId(int userId)
+        {
+            var groups = _context.Group.Where(x => x.Group_Users.All(y => y.UserId == userId && y.IsActive));
+            return groups;
+        }
 
-        public IQueryable<User> GetAllUsers(int groupId)
+        public IQueryable<User> GetAllUsersByGroupId(int groupId)
         {
             var users = _context.Users.Where(x => x.Group_Users.All(y=>y.GroupId == groupId));
             return users;
@@ -26,6 +31,7 @@ namespace Omack.Data.Infrastructure.Repositories
 
     public interface IGroupRepository : IGenericRepository<Group>
     {
-        IQueryable<User> GetAllUsers(int groupId);
+        IQueryable<User> GetAllUsersByGroupId(int groupId);
+        IQueryable<Group> GetAllGroupsByUserId(int userId);
     }
 }

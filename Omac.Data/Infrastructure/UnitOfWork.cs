@@ -11,6 +11,7 @@ namespace Omack.Data.Infrastructure
     {
         private OmackContext _context;
         private GroupRepository groupRepository;
+        private GroupUserRepository groupUserRepository;
         private ItemRepository itemRepository;
         private TransactionRepository transactionRepository;
         public UnitOfWork(OmackContext omackContext)
@@ -45,11 +46,22 @@ namespace Omack.Data.Infrastructure
         {
             get
             {
-                if(this.transactionRepository == null)
+                if (this.transactionRepository == null)
                 {
                     this.transactionRepository = new TransactionRepository(_context);
                 }
                 return transactionRepository;
+            }
+        }
+        public GroupUserRepository GroupUserRepository
+        {
+            get
+            {
+                if(this.groupUserRepository == null)
+                {
+                    this.groupUserRepository = new GroupUserRepository(_context);
+                }
+                return groupUserRepository;
             }
         }
         public void Save()

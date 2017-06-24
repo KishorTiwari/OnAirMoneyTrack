@@ -13,8 +13,6 @@ namespace Omack.Web.Controllers
     public class BaseController : Controller
     {
         private UserManager<User> _userManager;
-        private IdentityService _itemService;
-
         public BaseController(UserManager<User> userManager)
         {
             _userManager = userManager;

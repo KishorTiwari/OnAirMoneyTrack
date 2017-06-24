@@ -13,12 +13,10 @@ namespace Omack.Data.Models
         public int Id { get; set; }
         [MaxLength(50)]
         public string Name { get; set; }
-        [MaxLength(100)]
-        public string Email { get; set; }
         public Boolean IsActive { get; set; }
 
         //Foreign Keys
-        public int MediaId { get; set; }
+        public int? MediaId { get; set; }
 
         //Nav properties
         public Media Media { get; set; }

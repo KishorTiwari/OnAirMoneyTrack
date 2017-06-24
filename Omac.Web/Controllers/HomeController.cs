@@ -53,7 +53,6 @@ namespace Omac.Web.Controllers
             return Ok(claims);
         }
 
-        [Authorize(Roles = "administrator")]
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
@@ -61,29 +60,10 @@ namespace Omac.Web.Controllers
             return View();
         }
 
-        //[Authorize(Roles = "administrator,root")]
-        [Authorize(Policy = "ViewContact")]
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
-            return View();
-        }
-
-        public IActionResult Error()
-        {
-            return View();
-        }
-
-        [Authorize(Policy = "IsAdmin")]
+        [Authorize(Policy = "Admin")]
         public IActionResult AdminPage()
         {
-            return Ok("Admin Page");
-        }
-
-        [Authorize(Policy = "IsAdmin")]
-        public IActionResult BadPage()
-        {
-            return Ok("Some bad stuff. Only 18 plus are able to see this page");
+            return Ok("Only Admin can access this Page");
         }
 
         public IActionResult WriteCookies(string name, string value, bool isPersistent)

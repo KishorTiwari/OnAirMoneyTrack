@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 using Omack.Data.Infrastructure;
 using Omack.Services.Models;
 using System.Linq;
+using Omack.Core.Models;
 
 namespace Omack.Services.ServiceImplementations
 {
@@ -19,34 +20,67 @@ namespace Omack.Services.ServiceImplementations
             _unitOfWork = unitOfWork;
         }
 
-        public void Add(GroupServiceModel group)
+        public Result<GroupServiceModel> Add(GroupServiceModel group, CurrentUser currentUser)
         {
+            var result = new Result<GroupServiceModel>();
+            try
+            {
+                var newGroup = new Group()
+                {
+                    Name = group.Name,
+                    IsActive = true,
+                    MediaId = group.MediaId,
+                    CreatedOn = DateTime.UtcNow,
+                    CreatedBy = currentUser.Id,
+                    UpdatedOn = DateTime.UtcNow,
+                    UpdatedBy = currentUser.Id
+                };              
+                _unitOfWork.GroupRepository.Add(newGroup);
+                _unitOfWork.Save();
 
+                var newGroupUser = new Group_User()
+                {
+                    GroupId = newGroup.Id,
+                    UserId = currentUser.Id,
+                    IsActive = true
+                };
+                _unitOfWork.GroupUserRepository.Add(newGroupUser);
+                _unitOfWork.Save();
+                group.Id = newGroup.Id;
+                result.IsSuccess = true;
+                result.Data = group;
+
+                return result;
+            }
+            catch(Exception ex)
+            {
+                result.IsSuccess = false;
+                result.ErrorMessage = "Sorry. Something went wrong when adding a group.";
+                return result;
+            }          
+        }
+
+        public Result<GroupServiceModel> Delete(int Id, CurrentUser currentUser)
+        {
             throw new NotImplementedException();
         }
 
-        public void Delete(int Id)
+        public Result<IQueryable<GroupServiceModel>> GetAll()
         {
             throw new NotImplementedException();
         }
 
-        public IQueryable<GroupServiceModel> GetAll()
+        public Result<IQueryable<GroupServiceModel>> GetAll(Expression<Func<GroupServiceModel, bool>> where)
         {
             throw new NotImplementedException();
         }
 
-        public IQueryable<GroupServiceModel> GetAll(Expression<Func<GroupServiceModel, bool>> where)
-        {
-            // return _unitOfWork.GroupRepository.GetAll(where);
-            throw new NotImplementedException();
-        }
-
-        public GroupServiceModel GetById(int id)
+        public Result<GroupServiceModel> GetById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public void Update(GroupServiceModel group)
+        public Result<GroupServiceModel> Update(GroupServiceModel group, CurrentUser currentUser)
         {
             throw new NotImplementedException();
         }

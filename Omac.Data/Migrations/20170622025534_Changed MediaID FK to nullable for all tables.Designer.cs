@@ -8,9 +8,10 @@ using Omack.Data.DAL;
 namespace Omack.Data.Migrations
 {
     [DbContext(typeof(OmackContext))]
-    partial class OmackContextModelSnapshot : ModelSnapshot
+    [Migration("20170622025534_Changed MediaID FK to nullable for all tables")]
+    partial class ChangedMediaIDFKtonullableforalltables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
@@ -105,6 +106,9 @@ namespace Omack.Data.Migrations
                     b.Property<int?>("CreatedBy");
 
                     b.Property<DateTime?>("CreatedOn");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(100);
 
                     b.Property<bool>("IsActive");
 

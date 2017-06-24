@@ -46,6 +46,7 @@ namespace Omack.Web.Controllers
             var currentUserr = _userService.CurrentUser();
             if (User.Identity.IsAuthenticated)
             {
+
                 var currentUser = _userManager.GetUserName(User);
                 return Ok($"Hi {currentUser}. You are already logged in !");
             }
@@ -76,7 +77,7 @@ namespace Omack.Web.Controllers
                             return View();
                         }
                         else
-                        {
+                        {                           
                             if (string.IsNullOrWhiteSpace(returnUrl))
                             {
                                 return RedirectToAction("Index", "Home");
@@ -112,15 +113,14 @@ namespace Omack.Web.Controllers
                 {
                     UserName = userRegisterModel.UserName,
                     Email = userRegisterModel.Email,
-                    MediaId = 1
                 };
-                user.Claims.Add(new IdentityUserClaim<int>
-                {
-                    ClaimType = "ViewContact",
-                    ClaimValue = "ViewValue"
-                });
+                //user.Claims.Add(new IdentityUserClaim<int>
+                //{
+                //    ClaimType = "Admin",
+                //    ClaimValue = "Admin"
+                //});
                 await _userManager.CreateAsync(user, userRegisterModel.Password); //register user
-                return Ok(user.Claims);
+                return Ok($"Hi {user.UserName}. You've successfully created your account.");
             }
             return View(); //return View();
         }
