@@ -14,10 +14,12 @@ namespace Omack.Services.ServiceImplementations
     public class GroupService : IGroupService
     {
         private UnitOfWork _unitOfWork;
+        private UserService _userService;
 
-        public GroupService(UnitOfWork unitOfWork)
+        public GroupService(UnitOfWork unitOfWork, UserService userService)
         {
             _unitOfWork = unitOfWork;
+            _userService = userService;
         }
 
         public Result<GroupServiceModel> Add(GroupServiceModel group, CurrentUser currentUser)
@@ -65,12 +67,12 @@ namespace Omack.Services.ServiceImplementations
             throw new NotImplementedException();
         }
 
-        public Result<IQueryable<GroupServiceModel>> GetAll()
+        public Result<IEnumerable<GroupServiceModel>> GetAll()
         {
             throw new NotImplementedException();
         }
 
-        public Result<IQueryable<GroupServiceModel>> GetAll(Expression<Func<GroupServiceModel, bool>> where)
+        public Result<IEnumerable<GroupServiceModel>> GetAll(Expression<Func<GroupServiceModel, bool>> where)
         {
             throw new NotImplementedException();
         }
@@ -83,6 +85,39 @@ namespace Omack.Services.ServiceImplementations
         public Result<GroupServiceModel> Update(GroupServiceModel group, CurrentUser currentUser)
         {
             throw new NotImplementedException();
+        }
+        public Result<IEnumerable<GroupServiceModel>> GetAllGroupsByUserId(CurrentUser currentUser)
+        {
+            var result = new Result<IEnumerable<GroupServiceModel>>();
+            try
+            {
+                var groups = _unitOfWork.GroupRepository.GetAllGroupsByUserId(currentUser.Id);
+                if (groups.Any())
+                {
+                    var groupService = groups.Select(x => new GroupServiceModel()
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                        IsActive = x.IsActive,
+                        MediaId = x.MediaId
+                    });
+                    result.IsSuccess = true;
+                    result.Data = groupService;
+                    return result;
+                }
+                else
+                {
+                    result.IsSuccess = false;
+                    result.ErrorMessage = "Sorry. You don't have any groups.";
+                    return result;
+                }
+            }
+            catch(Exception ex)
+            {
+                result.IsSuccess = false;
+                result.ErrorMessage = "Sorry. Something went wrong when fetching data from server.";
+                return result;
+            }           
         }
     }
 }
