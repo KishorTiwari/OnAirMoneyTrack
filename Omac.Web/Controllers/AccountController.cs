@@ -43,7 +43,7 @@ namespace Omack.Web.Controllers
 
         public IActionResult Login()
         {
-            var currentUserr = _userService.CurrentUser();
+            //var currentUserr = _userService.CurrentUser();
             if (User.Identity.IsAuthenticated)
             {
 

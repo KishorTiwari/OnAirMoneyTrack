@@ -17,6 +17,7 @@ using Omack.Data.DAL;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using Omack.Web.Authorization;
+using Omack.Web.Site;
 
 namespace Omac.Web
 {
@@ -70,6 +71,7 @@ namespace Omac.Web
             services.AddSingleton<IAuthorizationHandler, IsGroupAdminHandler>();
             services.AddScoped<IItemService, ItemService>();
             services.AddScoped<UnitOfWork>();
+            services.AddScoped<SiteUtils>();
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)

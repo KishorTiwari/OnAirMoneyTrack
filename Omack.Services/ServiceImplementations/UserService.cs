@@ -29,16 +29,16 @@ namespace Omack.Services.ServiceImplementations
             _unitOfWork = unitOfwork;
             _currentUser = _userManager.GetUserAsync(_context.HttpContext.User).Result;
         }
-        public CurrentUser CurrentUser()
-        {
-            var user = new CurrentUser()
-            {
-                Id = _currentUser.Id,
-                Name = _currentUser.UserName,
-                Email = _currentUser.Email
-            };
-            return user;
-        } 
+        //public CurrentUser CurrentUser()
+        //{
+        //    var user = new CurrentUser()
+        //    {
+        //        Id = _currentUser.Id,
+        //        Name = _currentUser.UserName,
+        //        Email = _currentUser.Email
+        //    };
+        //    return user;
+        //} 
         public bool IsAdmin()
         {
             var userId = Convert.ToInt32(_userManager.GetUserId(_context.HttpContext.User));

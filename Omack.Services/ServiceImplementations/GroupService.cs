@@ -61,27 +61,51 @@ namespace Omack.Services.ServiceImplementations
                 return result;
             }          
         }
-
         public Result<GroupServiceModel> Delete(int Id, CurrentUser currentUser)
         {
             throw new NotImplementedException();
         }
-
-        public Result<IEnumerable<GroupServiceModel>> GetAll()
+        public Result<IEnumerable<GroupServiceModel>> GetAllByUserId(CurrentUser currentUser)
+        {
+            var result = new Result<IEnumerable<GroupServiceModel>>();
+            try
+            {
+                var groups = _unitOfWork.GroupRepository.GetAll(x=>x.Group_Users.All(y=>y.UserId == currentUser.Id));
+                if (groups.Any())
+                {
+                    var groupService = groups.Select(group => new GroupServiceModel
+                    {
+                        Id = group.Id,
+                        Name = group.Name,
+                        IsActive = group.IsActive,
+                        MediaId = group.MediaId,
+                        CreatedOn = group.CreatedOn,
+                        CreatedBy = group.CreatedBy,
+                        UpdatedOn = group.UpdatedOn,
+                        UpdatedBy = group.UpdatedBy
+                    });
+                    result.IsSuccess = true;
+                    result.Data = groupService;
+                    return result;
+                }
+                else
+                {
+                    result.IsSuccess = false;
+                    result.ErrorMessage = "Sorry. You don't have any groups";
+                    return result;
+                }
+            }
+            catch(Exception ex)
+            {
+                result.IsSuccess = false;
+                result.ErrorMessage = "Something went wrong while fetching data from database";
+                return result;
+            }
+        }
+        public Result<GroupServiceModel> GetById(int id, CurrentUser currentUser)
         {
             throw new NotImplementedException();
         }
-
-        public Result<IEnumerable<GroupServiceModel>> GetAll(Expression<Func<GroupServiceModel, bool>> where)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Result<GroupServiceModel> GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public Result<GroupServiceModel> Update(GroupServiceModel group, CurrentUser currentUser)
         {
             throw new NotImplementedException();
