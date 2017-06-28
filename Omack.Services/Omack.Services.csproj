@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Omac.Data\Omack.Data.csproj" />
+    <ProjectReference Include="..\Omack.Core\Omack.Core.csproj" />
   </ItemGroup>
 
 </Project>

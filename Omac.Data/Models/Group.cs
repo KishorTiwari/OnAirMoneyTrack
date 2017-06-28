@@ -11,14 +11,16 @@ namespace Omack.Data.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        [Required]
         [MaxLength(50)]
         public string Name { get; set; }
-        [Required]
-        [MaxLength(100)]
-        public string Email { get; set; }
         public Boolean IsActive { get; set; }
 
+        //Foreign Keys
+        public int? MediaId { get; set; }
+
+        //Nav properties
+        public Media Media { get; set; }
+        public ICollection<Group_User> Group_Users { get; set; }
         //System Properties  [Note: UpdatedBy & CreatedBy = Current Loggedin User ID]
         public DateTime? CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }

@@ -34,7 +34,7 @@ namespace Omack.Api.Controllers
         [HttpGet()]
         public IActionResult GetItems()
         {
-            var items = _unitOfWork.itemRepository.GetAll();   //later we will implement interface for this.
+            var items = _unitOfWork.ItemRepository.GetAll();   //later we will implement interface for this.
             //var items = new SampleData(); if we initialize here, we dont need  "current" static method in the SampleData class.
             if (items == null)
             {

@@ -1,19 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.6
+VisualStudioVersion = 15.0.26430.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Omack.Core", "Omack.Core\Omack.Core.csproj", "{EA0924BB-6CA1-41CB-90B4-62581B232CCA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Omack.Core", "Omack.Core\Omack.Core.csproj", "{EA0924BB-6CA1-41CB-90B4-62581B232CCA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Omack.Data", "Omac.Data\Omack.Data.csproj", "{7072802A-C1A3-431B-A6A7-964707F37484}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Omack.Data", "Omac.Data\Omack.Data.csproj", "{7072802A-C1A3-431B-A6A7-964707F37484}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Omack.Test", "Omac.Test\Omack.Test.csproj", "{226EEE90-A65D-4371-8900-E83F1DEA1A03}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Omack.Test", "Omac.Test\Omack.Test.csproj", "{226EEE90-A65D-4371-8900-E83F1DEA1A03}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Omack.Web", "Omac.Web\Omack.Web.csproj", "{39D70907-13F3-4B5B-9BAD-7980526C7339}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Omack.Web", "Omac.Web\Omack.Web.csproj", "{39D70907-13F3-4B5B-9BAD-7980526C7339}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Omack.Api", "Omack.Api\Omack.Api.csproj", "{153A857D-D22C-478B-AA76-54A61AAFB480}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Omack.Api", "Omack.Api\Omack.Api.csproj", "{153A857D-D22C-478B-AA76-54A61AAFB480}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Omack.Services", "Omack.Services\Omack.Services.csproj", "{F48BD220-9786-466C-B716-41BE25B6469E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Omack.Services", "Omack.Services\Omack.Services.csproj", "{F48BD220-9786-466C-B716-41BE25B6469E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Omack.Mobile", "Omack.Mobile\Omack.Mobile\Omack.Mobile.csproj", "{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -331,6 +333,54 @@ Global
 		{F48BD220-9786-466C-B716-41BE25B6469E}.Release|x64.Build.0 = Release|Any CPU
 		{F48BD220-9786-466C-B716-41BE25B6469E}.Release|x86.ActiveCfg = Release|Any CPU
 		{F48BD220-9786-466C-B716-41BE25B6469E}.Release|x86.Build.0 = Release|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.Ad-Hoc|Any CPU.Build.0 = Release|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.Ad-Hoc|ARM.ActiveCfg = Release|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.Ad-Hoc|ARM.Build.0 = Release|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.Ad-Hoc|iPhone.ActiveCfg = Release|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.Ad-Hoc|iPhone.Build.0 = Release|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.Ad-Hoc|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.Ad-Hoc|iPhoneSimulator.Build.0 = Release|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.Ad-Hoc|x64.ActiveCfg = Release|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.Ad-Hoc|x64.Build.0 = Release|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.Ad-Hoc|x86.ActiveCfg = Release|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.Ad-Hoc|x86.Build.0 = Release|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.AppStore|Any CPU.Build.0 = Release|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.AppStore|ARM.ActiveCfg = Release|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.AppStore|ARM.Build.0 = Release|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.AppStore|iPhone.ActiveCfg = Release|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.AppStore|iPhone.Build.0 = Release|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.AppStore|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.AppStore|iPhoneSimulator.Build.0 = Release|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.AppStore|x64.ActiveCfg = Release|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.AppStore|x64.Build.0 = Release|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.AppStore|x86.ActiveCfg = Release|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.AppStore|x86.Build.0 = Release|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.Debug|ARM.Build.0 = Debug|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.Debug|x64.Build.0 = Debug|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.Debug|x86.Build.0 = Debug|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.Release|ARM.ActiveCfg = Release|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.Release|ARM.Build.0 = Release|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.Release|iPhone.Build.0 = Release|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.Release|x64.ActiveCfg = Release|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.Release|x64.Build.0 = Release|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.Release|x86.ActiveCfg = Release|Any CPU
+		{FAB78321-AE72-4735-9ADC-9E6CBC6F4D42}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -12,20 +12,21 @@ using Microsoft.AspNetCore.Identity;
 using System.Threading;
 using Omack.Services.Models;
 using Microsoft.AspNetCore.Authorization;
+using Omack.Web.Controllers;
+using Microsoft.AspNetCore.Http;
 
 namespace Omac.Web.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private IItemService _itemService;
         private UserManager<User> _userManager;
 
-        public HomeController(IItemService itemService, UserManager<User> userManager)
+        public HomeController(IItemService itemService, UserManager<User> userManager) : base(userManager)
         {
             _userManager = userManager;
             _itemService = itemService;
         }
-
         public ActionResult Demo(ItemServiceModel model)
         {
             var item = new ItemServiceModel
@@ -34,7 +35,7 @@ namespace Omac.Web.Controllers
                 Price = 15,
                 DateOfPurchase = DateTime.UtcNow,
                 ItemType = 1,
-                UserId = 1,
+                UserId = 2,
                 GroupId = 10,
                 MediaId = 1
             };
@@ -45,8 +46,11 @@ namespace Omac.Web.Controllers
         [Authorize]
         public IActionResult Index(int? Id)
         {
-            var currentUserName = _userManager.GetUserName(User);
-            return Ok($"Hi {currentUserName}. You're authorized to access this page. ");
+            var cookies = Request.Cookies;
+
+            var claims = HttpContext.User.Claims;
+
+            return Ok(claims);
         }
 
         public IActionResult About()
@@ -56,17 +60,22 @@ namespace Omac.Web.Controllers
             return View();
         }
 
-        [Authorize(Roles = "GroupAdmin")]
-        public IActionResult Contact()
+        [Authorize(Policy = "Admin")]
+        public IActionResult AdminPage()
         {
-            ViewData["Message"] = "Your contact page.";
-
-            return View();
+            return Ok("Only Admin can access this Page");
         }
 
-        public IActionResult Error()
+        public IActionResult WriteCookies(string name, string value, bool isPersistent)
         {
-            return View();
+            if (isPersistent)
+            {
+                var opt = new CookieOptions();
+                opt.Expires = DateTime.UtcNow.AddMinutes(60);
+                Response.Cookies.Append(name, value, opt);
+            }
+            var cookieAddress = Request.Cookies["address"];
+            return Ok($"Cookie stored. Value is: {cookieAddress}");
         }
     }
 }

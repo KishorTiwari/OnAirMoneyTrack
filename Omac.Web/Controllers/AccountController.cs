@@ -8,6 +8,9 @@ using Omack.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Omack.Web.ViewModels;
 using System.Security.Claims;
+using Omack.Core;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Omack.Services.ServiceImplementations;
 
 namespace Omack.Web.Controllers
 {
@@ -17,18 +20,21 @@ namespace Omack.Web.Controllers
         private UserManager<User> _userManager;
         private SignInManager<User> _signInManager;
         private RoleManager<Role> _roleManager;
+        private UserService _userService;
 
         public AccountController(
             UnitOfWork unitOfWork,
             UserManager<User> userManager,
             SignInManager<User> signInManager,
-            RoleManager<Role> roleManager
+            RoleManager<Role> roleManager,
+            UserService userService
             )
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _userService = userService;
         }
         public IActionResult Index()
         {
@@ -37,8 +43,10 @@ namespace Omack.Web.Controllers
 
         public IActionResult Login()
         {
+            //var currentUserr = _userService.CurrentUser();
             if (User.Identity.IsAuthenticated)
             {
+
                 var currentUser = _userManager.GetUserName(User);
                 return Ok($"Hi {currentUser}. You are already logged in !");
             }
@@ -55,26 +63,35 @@ namespace Omack.Web.Controllers
             {
                 try
                 {
-                    var signInResult = await _signInManager.PasswordSignInAsync(userLoginModel.UserName, userLoginModel.Password, true, false); //sign in new user
-                    if (signInResult.Succeeded)
+                    var user = await _userManager.FindByEmailAsync(userLoginModel.Email);
+                    if (user == null)
                     {
-                        if (string.IsNullOrWhiteSpace(returnUrl))
-                        {
-                            return RedirectToAction("Index", "Home");
-                        }
-                        else
-                        {
-                            return Redirect(returnUrl);
-                        }
+                        ModelState.AddModelError(string.Empty, "Invalid Email.");
                     }
                     else
-                    {
-                        ModelState.AddModelError("", "Invalid Email or Password.");
+                    {                       
+                        var signIn = await _signInManager.PasswordSignInAsync(user.UserName, userLoginModel.Password, userLoginModel.RememberMe, false);
+                        if (!signIn.Succeeded)
+                        {
+                            ModelState.AddModelError(string.Empty, "Invalid Password");
+                            return View();
+                        }
+                        else
+                        {                           
+                            if (string.IsNullOrWhiteSpace(returnUrl))
+                            {
+                                return RedirectToAction("Index", "Home");
+                            }
+                            else
+                            {
+                                return Redirect(returnUrl);
+                            }
+                        }
                     }
                 }
                 catch (Exception e)
                 {
-                    var error = e;
+                    throw new Exception("Something went wrong while signing in user. Please contact adminstrator. Thank You");
                 }
 
             }
@@ -96,23 +113,68 @@ namespace Omack.Web.Controllers
                 {
                     UserName = userRegisterModel.UserName,
                     Email = userRegisterModel.Email,
-                    MediaId = 1
                 };
+                //user.Claims.Add(new IdentityUserClaim<int>
+                //{
+                //    ClaimType = "Admin",
+                //    ClaimValue = "Admin"
+                //});
                 await _userManager.CreateAsync(user, userRegisterModel.Password); //register user
-                return Ok(user);
+                return Ok($"Hi {user.UserName}. You've successfully created your account.");
             }
             return View(); //return View();
         }
 
-        public async Task<IActionResult> MakeAdmin(string email)
+        public IActionResult SelectGroup()
         {
-            var role = new Role();
-            role.Name = "GroupAdmin";
-            await _roleManager.CreateAsync(role);  //create role
-            //var user = await _userManager.FindByEmailAsync(email);
-            //await _userManager.AddToRoleAsync(user, "Root");   //add to role
+           // var groups = 
+            return View();
+        }
+        public async Task<IActionResult> CreateRole(string email, string role)
+        {
+            var newRole = new Role();
+            await _roleManager.CreateAsync(newRole);  //create role
+            var user = await _userManager.FindByEmailAsync(email);
+            //await _userManager.AddToRoleAsync(user, role);   //add to role
+
+            //List<Claim> claims = new List<Claim>();
+            //claims.Add(new Claim(ClaimTypes.Name, "GrantFullAccess", ClaimValueTypes.String, null));
+            //var userIdentity = new ClaimsIdentity("SuperUser");
+            //userIdentity.AddClaims(claims);
+            //var userPrincipal = new ClaimsPrincipal(userIdentity);
+            //await HttpContext.Authentication.SignInAsync("Cookie", userPrincipal, new Microsoft.AspNetCore.Http.Authentication.AuthenticationProperties
+            //{
+            //    ExpiresUtc = DateTime.UtcNow.AddMinutes(20),
+            //    IsPersistent = true,
+            //    AllowRefresh = false
+            //});
+            newRole.Name = role;
+            //await _userManager.AddClaimsAsync(user, claims);
+
             //await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, "Root"));
             return Ok("Changed to Admin");
+        }
+        public async Task<IActionResult> AssignRole(string email, string role)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            await _userManager.AddToRoleAsync(user, role);   //add to role
+            //await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, "Root"));
+            return Ok($"Changed to {role}");
+        }
+        public async Task<IActionResult> Claim(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            user.Claims.Add(new IdentityUserClaim<int>
+            {
+                ClaimType = "ViewContact",
+                ClaimValue = "View Contact"
+            });
+            return Ok(user.Claims);
+        }
+        public IActionResult AccessDenied()
+        {
+            return Ok("Sorry. Access denied");
         }
     }
 }
