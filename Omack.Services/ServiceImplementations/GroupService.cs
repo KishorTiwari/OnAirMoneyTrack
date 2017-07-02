@@ -104,7 +104,15 @@ namespace Omack.Services.ServiceImplementations
         }
         public Result<GroupServiceModel> GetById(int id, CurrentUser currentUser)
         {
-            throw new NotImplementedException();
+            var result = new Result<GroupServiceModel>();
+            try
+            {
+                var group = _unitOfWork.GroupRepository.GetById(id);
+            }
+            catch(Exception ex)
+            {
+
+            }
         }
         public Result<GroupServiceModel> Update(GroupServiceModel group, CurrentUser currentUser)
         {
