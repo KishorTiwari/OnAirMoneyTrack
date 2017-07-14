@@ -7,6 +7,9 @@ using Omack.Data;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.Extensions.Logging;
 using Omack.Data.Infrastructure;
+using Omack.Services.Services;
+using Omack.Core.Models;
+using Omack.Services.ServiceImplementations;
 
 namespace Omack.Api.Controllers
 {
@@ -15,12 +18,13 @@ namespace Omack.Api.Controllers
     {
         private UnitOfWork _unitOfWork; //
         private ILogger<ValuesController> _logger; //Ilogger service is implemented by default, so we don't have to add it as service but we can configure in ConfigureServices method in startup.cs.
+       
         public ValuesController(ILogger<ValuesController> logger, 
-                                UnitOfWork unitOfWork) //d.I through constructor....also called as container 
+                                UnitOfWork unitOfWork
+                                ) //d.I through constructor....also called as container 
         {
             this._logger = logger;
             this._unitOfWork = unitOfWork;//new UnitOfWork();
-
         }
         //[HttpGet()]
         public JsonResult GetItemsTest()
@@ -34,8 +38,16 @@ namespace Omack.Api.Controllers
         [HttpGet()]
         public IActionResult GetItems()
         {
-            var items = _unitOfWork.ItemRepository.GetAll();   //later we will implement interface for this.
-            //var items = new SampleData(); if we initialize here, we dont need  "current" static method in the SampleData class.
+            var items = _unitOfWork.GroupRepository.GetAll();   //later we will implement interface for this.
+
+            try
+            {
+                throw new NullReferenceException();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong. Error: {ex}");
+            }
             if (items == null)
             {
                 return NotFound("Sorry. There are no items.");
@@ -86,7 +98,6 @@ namespace Omack.Api.Controllers
             else
             {
                 SampleData.Current.Items.Add(item);
-
                 //it will return 201 success code since it is post. And also it will return given URL as the header Location. 
                 return CreatedAtRoute("GetItem", new { id = item.Id }, item);
                 //normally for post new data, we return data as well as it's new location in header

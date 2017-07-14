@@ -14,9 +14,6 @@ namespace Omack.Web.ViewModels
         [Required]
         [MaxLength(50)]
         public string Name { get; set; }
-        [Required]
-        [MaxLength(100)]
-        public string Email { get; set; }
         public Boolean IsActive { get; set; }
                                           
         //System Properties  [Note: UpdatedBy & CreatedBy = Current Loggedin User ID]

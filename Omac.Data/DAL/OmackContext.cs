@@ -11,7 +11,7 @@ namespace Omack.Data.DAL
     public class OmackContext: IdentityDbContext<User, Role, int>
     {
         //use dbcontextoption configured in startup.cs class
-        public OmackContext(DbContextOptions options): base(options)
+        public OmackContext(DbContextOptions<OmackContext> options): base(options)
         {
         }
         public DbSet<Group> Group { get; set; } 

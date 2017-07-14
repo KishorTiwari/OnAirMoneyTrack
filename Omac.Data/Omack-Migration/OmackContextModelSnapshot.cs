@@ -5,13 +5,12 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Omack.Data.DAL;
 
-namespace Omack.Data.Migrations
+namespace Omack.Data.OmackMigration
 {
     [DbContext(typeof(OmackContext))]
-    [Migration("20170620100609_update groupUser Fk")]
-    partial class updategroupUserFk
+    partial class OmackContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
@@ -107,12 +106,9 @@ namespace Omack.Data.Migrations
 
                     b.Property<DateTime?>("CreatedOn");
 
-                    b.Property<string>("Email")
-                        .HasMaxLength(100);
-
                     b.Property<bool>("IsActive");
 
-                    b.Property<int>("MediaId");
+                    b.Property<int?>("MediaId");
 
                     b.Property<string>("Name")
                         .HasMaxLength(50);
@@ -123,7 +119,8 @@ namespace Omack.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MediaId");
+                    b.HasIndex("MediaId")
+                        .IsUnique();
 
                     b.ToTable("Group");
                 });
@@ -175,7 +172,7 @@ namespace Omack.Data.Migrations
 
                     b.Property<int>("ItemType");
 
-                    b.Property<int>("MediaId");
+                    b.Property<int?>("MediaId");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -194,7 +191,8 @@ namespace Omack.Data.Migrations
 
                     b.HasIndex("GroupId");
 
-                    b.HasIndex("MediaId");
+                    b.HasIndex("MediaId")
+                        .IsUnique();
 
                     b.HasIndex("UserId");
 
@@ -214,6 +212,8 @@ namespace Omack.Data.Migrations
 
                     b.Property<bool>("IsActive");
 
+                    b.Property<int?>("TransactionId");
+
                     b.Property<int>("TypeId");
 
                     b.Property<int?>("UpdatedBy");
@@ -223,6 +223,8 @@ namespace Omack.Data.Migrations
                     b.Property<string>("Url");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TransactionId");
 
                     b.ToTable("Media");
                 });
@@ -237,7 +239,6 @@ namespace Omack.Data.Migrations
                     b.Property<DateTime?>("CreatedOn");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(250);
 
                     b.Property<int>("GroupId");
@@ -351,7 +352,7 @@ namespace Omack.Data.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
 
-                    b.Property<int>("MediaId");
+                    b.Property<int?>("MediaId");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256);
@@ -378,7 +379,8 @@ namespace Omack.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MediaId");
+                    b.HasIndex("MediaId")
+                        .IsUnique();
 
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
@@ -430,9 +432,8 @@ namespace Omack.Data.Migrations
             modelBuilder.Entity("Omack.Data.Models.Group", b =>
                 {
                     b.HasOne("Omack.Data.Models.Media", "Media")
-                        .WithMany()
-                        .HasForeignKey("MediaId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .WithOne("Group")
+                        .HasForeignKey("Omack.Data.Models.Group", "MediaId");
                 });
 
             modelBuilder.Entity("Omack.Data.Models.Group_User", b =>
@@ -456,14 +457,20 @@ namespace Omack.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Omack.Data.Models.Media", "Media")
-                        .WithMany()
-                        .HasForeignKey("MediaId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .WithOne("Item")
+                        .HasForeignKey("Omack.Data.Models.Item", "MediaId");
 
                     b.HasOne("Omack.Data.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Omack.Data.Models.Media", b =>
+                {
+                    b.HasOne("Omack.Data.Models.Transaction", "Transaction")
+                        .WithMany()
+                        .HasForeignKey("TransactionId");
                 });
 
             modelBuilder.Entity("Omack.Data.Models.Notification", b =>
@@ -495,9 +502,8 @@ namespace Omack.Data.Migrations
             modelBuilder.Entity("Omack.Data.Models.User", b =>
                 {
                     b.HasOne("Omack.Data.Models.Media", "Media")
-                        .WithMany()
-                        .HasForeignKey("MediaId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .WithOne("User")
+                        .HasForeignKey("Omack.Data.Models.User", "MediaId");
                 });
         }
     }

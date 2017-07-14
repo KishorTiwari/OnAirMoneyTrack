@@ -14,6 +14,7 @@ using Omack.Services.Models;
 using Microsoft.AspNetCore.Authorization;
 using Omack.Web.Controllers;
 using Microsoft.AspNetCore.Http;
+using Omack.Web.Site;
 
 namespace Omac.Web.Controllers
 {
@@ -21,11 +22,19 @@ namespace Omac.Web.Controllers
     {
         private IItemService _itemService;
         private UserManager<User> _userManager;
+        private GroupService _groupService;
+        private SiteUtils _siteUtils;
 
-        public HomeController(IItemService itemService, UserManager<User> userManager) : base(userManager)
+        public HomeController(
+            IItemService itemService,
+            GroupService groupService,
+            SiteUtils siteUtils,
+            UserManager<User> userManager) : base(userManager)
         {
             _userManager = userManager;
+            _siteUtils = siteUtils;
             _itemService = itemService;
+            _groupService = groupService;
         }
         public ActionResult Demo(ItemServiceModel model)
         {
@@ -76,6 +85,16 @@ namespace Omac.Web.Controllers
             }
             var cookieAddress = Request.Cookies["address"];
             return Ok($"Cookie stored. Value is: {cookieAddress}");
+        }
+
+        public IActionResult GroupTestDelete(int Id)
+        {
+            var result = _groupService.Delete(Id, _siteUtils.CurrentUser());
+            if (result.IsSuccess)
+            {
+                return Ok(result.Data);
+            }
+            return Ok(result.ErrorMessage);
         }
     }
 }

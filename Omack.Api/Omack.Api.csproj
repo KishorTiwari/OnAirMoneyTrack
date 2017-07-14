@@ -12,6 +12,7 @@
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Xml" Version="1.1.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="1.1.2" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.1" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.4.0" />
   </ItemGroup>
@@ -22,6 +23,7 @@
     <ProjectReference Include="..\Omac.Data\Omack.Data.csproj" />
     <ProjectReference Include="..\Omac.Test\Omack.Test.csproj" />
     <ProjectReference Include="..\Omack.Core\Omack.Core.csproj" />
+    <ProjectReference Include="..\Omack.Services\Omack.Services.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="nlog.config">

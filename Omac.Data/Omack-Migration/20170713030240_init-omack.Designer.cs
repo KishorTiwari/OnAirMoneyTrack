@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Omack.Data.DAL;
 
-namespace Omack.Data.Migrations
+namespace Omack.Data.OmackMigration
 {
     [DbContext(typeof(OmackContext))]
-    [Migration("20170622050453_removed email - Group tbl")]
-    partial class removedemailGrouptbl
+    [Migration("20170713030240_init-omack")]
+    partial class initomack
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

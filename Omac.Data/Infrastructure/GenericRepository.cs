@@ -31,6 +31,10 @@ namespace Omack.Data.Infrastructure
             }
             return query;
         }
+        public TEntity GetSingle(Expression<Func<TEntity, bool>> filter = null)
+        {
+            return dbSet.SingleOrDefault(filter);
+        }
         public TEntity GetById (int id)
         {
             return dbSet.Find(id);  
@@ -44,6 +48,7 @@ namespace Omack.Data.Infrastructure
         public void Add(TEntity entity)
         {
             dbSet.Add(entity);
+            //return entity;          
         }
         public void Update(TEntity entity)
         {

@@ -7,11 +7,16 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Serialization;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using NLog.Extensions.Logging;
 using NLog.Web;
 using Omack.Data.Infrastructure;
+using Omack.Data.DAL;
+using NLog;
+using Omack.Services.ServiceImplementations;
+using Omack.Services.Services;
 
 namespace Omack.Api
 {
@@ -40,7 +45,10 @@ namespace Omack.Api
                     {
                         o.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
                     });
+            services.AddDbContext<OmackContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("Omack-Dev")));
+            services.AddDbContext<OmackLogContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("Omack-Log")));
             services.AddScoped<UnitOfWork>();
+            services.AddScoped<GroupService>();
             //sets the default camelcase format for returned json result to null, which will finally depened upon C# object's property names
             //.AddJsonOptions(o =>
             //{
@@ -58,6 +66,7 @@ namespace Omack.Api
             //loggerFactory.AddConsole();
             //loggerFactory.AddDebug(); //by default: Information level or more serious. to log critical error .AddDebug(LogLevel.Critical).            
             loggerFactory.AddNLog(); //buildin extension for Nlog
+            LogManager.Configuration.Variables["Omack-Log"] = Configuration.GetConnectionString("Omack-Log");
             app.AddNLogWeb();
             app.UseStatusCodePages();  //to show status code to the browser. Otherwise we have to look through console to inspect status code.
             app.UseMvc();

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Omack.Services.Models
 {
-    class Group_UserServiceModel
+    class GroupUserServiceModel
     {
         public int Id { get; set; }
         public int GroupId { get; set; }
