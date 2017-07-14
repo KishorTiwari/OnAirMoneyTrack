@@ -8,25 +8,31 @@ using Omack.Data.Infrastructure;
 using Omack.Services.Models;
 using System.Linq;
 using Omack.Core.Models;
+using AutoMapper;
+using Microsoft.Extensions.Logging;
 
 namespace Omack.Services.ServiceImplementations
 {
     public class GroupService : IGroupService
     {
         private UnitOfWork _unitOfWork;
-        private UserService _userService;
+        private IMapper _mapper;
+        private ILogger<GroupService> _logger;
 
-        public GroupService(UnitOfWork unitOfWork, UserService userService)
+        public GroupService(UnitOfWork unitOfWork, IMapper mapper, ILogger<GroupService> logger)
         {
+            _mapper = mapper;
             _unitOfWork = unitOfWork;
-            _userService = userService;
+            _logger = logger;
         }
 
         public Result<GroupServiceModel> Add(GroupServiceModel group, CurrentUser currentUser)
         {
-            var result = new Result<GroupServiceModel>();
+            var result = new Result<GroupServiceModel>();           
             try
             {
+                throw new ArgumentNullException();
+                //No mapping. Because system properties shouldn't be null. 
                 var newGroup = new Group()
                 {
                     Name = group.Name,
@@ -36,7 +42,7 @@ namespace Omack.Services.ServiceImplementations
                     CreatedBy = currentUser.Id,
                     UpdatedOn = DateTime.UtcNow,
                     UpdatedBy = currentUser.Id
-                };              
+                };
                 _unitOfWork.GroupRepository.Add(newGroup);
                 _unitOfWork.Save();
 
@@ -48,14 +54,17 @@ namespace Omack.Services.ServiceImplementations
                 };
                 _unitOfWork.GroupUserRepository.Add(newGroupUser);
                 _unitOfWork.Save();
-                group.Id = newGroup.Id;
-                result.IsSuccess = true;
-                result.Data = group;
 
+                //return mapped new group
+                var mappedNewGroup = _mapper.Map<GroupServiceModel>(newGroup); 
+
+                result.IsSuccess = true;
+                result.Data = mappedNewGroup;
                 return result;
             }
             catch(Exception ex)
             {
+                _logger.LogCritical($"Error: {ex}");
                 result.IsSuccess = false;
                 result.ErrorMessage = "Sorry. Something went wrong when adding a group.";
                 return result;
@@ -63,14 +72,53 @@ namespace Omack.Services.ServiceImplementations
         }
         public Result<GroupServiceModel> Delete(int Id, CurrentUser currentUser)
         {
-            throw new NotImplementedException();
-        }
-        public Result<IEnumerable<GroupServiceModel>> GetAllByUserId(CurrentUser currentUser)
-        {
-            var result = new Result<IEnumerable<GroupServiceModel>>();
+            var result = new Result<GroupServiceModel>();
             try
             {
-                var groups = _unitOfWork.GroupRepository.GetAll(x=>x.Group_Users.All(y=>y.UserId == currentUser.Id));
+                var dbGroup = _unitOfWork.GroupRepository.GetById(Id, x => x.IsActive == true && x.Id == Id && x.Group_Users.All(y => y.UserId == currentUser.Id && y.IsActive == true));
+                if(dbGroup != null)
+                {
+                    //IsActive to false for group
+                    dbGroup.IsActive = false;
+                    dbGroup.UpdatedBy = currentUser.Id;
+                    dbGroup.UpdatedOn = DateTime.UtcNow;
+
+                    //IsActive to false for GroupUser 
+                    var dbGroupUser = _unitOfWork.GroupUserRepository.GetSingle(x => x.Group.Id == dbGroup.Id && x.Group.IsActive);
+                    dbGroupUser.IsActive = false;
+                    dbGroupUser.UpdatedBy = currentUser.Id;
+                    dbGroupUser.UpdatedOn = DateTime.UtcNow;
+
+                    _unitOfWork.GroupRepository.Update(dbGroup);
+                    _unitOfWork.Save();
+
+                    //return deleted Group
+                    var updatedGroup = _mapper.Map<GroupServiceModel>(dbGroup);                  
+                    result.IsSuccess = true;
+                    result.Data = updatedGroup;
+
+                    return result;
+                }
+                else
+                {
+                    result.IsSuccess = false;
+                    result.ErrorMessage = "Sorry. This group doesn't belongs to you or it doesn't exists.";
+                    return result;
+                }
+            }
+            catch(Exception ex)
+            {
+                result.IsSuccess = false;
+                result.ErrorMessage = "Something went wrong while deleting group.";
+                return result;
+            }
+        }
+        public Result<IQueryable<GroupServiceModel>> GetAllByUserId(CurrentUser currentUser)
+        {
+            var result = new Result<IQueryable<GroupServiceModel>>();
+            try
+            {
+                var groups = _unitOfWork.GroupRepository.GetAll(x=> x.IsActive == true && x.Group_Users.All(y=>y.UserId == currentUser.Id && x.IsActive == true));
                 if (groups.Any())
                 {
                     var groupService = groups.Select(group => new GroupServiceModel
@@ -104,44 +152,58 @@ namespace Omack.Services.ServiceImplementations
         }
         public Result<GroupServiceModel> GetById(int id, CurrentUser currentUser)
         {
-            throw new NotImplementedException();
-        }
-        public Result<GroupServiceModel> Update(GroupServiceModel group, CurrentUser currentUser)
-        {
-            throw new NotImplementedException();
-        }
-        public Result<IEnumerable<GroupServiceModel>> GetAllGroupsByUserId(CurrentUser currentUser)
-        {
-            var result = new Result<IEnumerable<GroupServiceModel>>();
+            var result = new Result<GroupServiceModel>();
             try
             {
-                var groups = _unitOfWork.GroupRepository.GetAllGroupsByUserId(currentUser.Id);
-                if (groups.Any())
+                var dbGroup = _unitOfWork.GroupRepository.GetById(id, x => x.IsActive == true && x.Group_Users.All(y => y.IsActive == true && y.UserId == currentUser.Id));
+                if(dbGroup == null)
                 {
-                    var groupService = groups.Select(x => new GroupServiceModel()
-                    {
-                        Id = x.Id,
-                        Name = x.Name,
-                        IsActive = x.IsActive,
-                        MediaId = x.MediaId
-                    });
-                    result.IsSuccess = true;
-                    result.Data = groupService;
+                    result.IsSuccess = false;
+                    result.ErrorMessage = "Sorry. This group doesn't exists or it doesn't belongs to you.";
                     return result;
                 }
                 else
-                {
-                    result.IsSuccess = false;
-                    result.ErrorMessage = "Sorry. You don't have any groups.";
+                {             
+                    //Use mapper because data is being returned from database. Hence, all properties has data.
+                    var group = _mapper.Map<GroupServiceModel>(dbGroup);
+                    result.IsSuccess = true;
+                    result.Data = group;
                     return result;
                 }
             }
             catch(Exception ex)
             {
                 result.IsSuccess = false;
-                result.ErrorMessage = "Sorry. Something went wrong when fetching data from server.";
+                result.ErrorMessage = "Something went wrong while fetching data.";
                 return result;
-            }           
+            }
+        }
+        public Result<GroupServiceModel> Update(GroupServiceModel groupModel, CurrentUser currentUser)
+        {
+            var result = new Result<GroupServiceModel>();
+            try
+            {
+                var group = _mapper.Map<Group>(groupModel);
+
+                //append system properties as mapper map to null
+                group.UpdatedBy = currentUser.Id;
+                group.UpdatedOn = DateTime.UtcNow;
+
+                _unitOfWork.GroupRepository.Update(group);
+                _unitOfWork.Save();
+
+                //map it to GroupServiceModel 
+                var updatedGroup = _mapper.Map<GroupServiceModel>(group);
+                result.IsSuccess = true;
+                result.Data = updatedGroup;
+                return result;
+            }
+            catch(Exception ex)
+            {
+                result.IsSuccess = false;
+                result.ErrorMessage = "Something went wrong while updating group";
+                return result;
+            }
         }
     }
 }

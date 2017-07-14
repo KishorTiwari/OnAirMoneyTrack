@@ -18,6 +18,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using Omack.Web.Authorization;
 using Omack.Web.Site;
+using Omack.Web.AppStart;
+using NLog.Web;
+using NLog.Extensions.Logging;
+using NLog;
 
 namespace Omac.Web
 {
@@ -31,6 +35,7 @@ namespace Omac.Web
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
+            env.ConfigureNLog("nlog.config"); //nlog configuration file
             Configuration = builder.Build();
         }
 
@@ -39,6 +44,13 @@ namespace Omac.Web
         {
             // Add framework services.
             //services.AddSingleton(Configuration); // if we need to access it's content outside, user this service.
+
+            var autoConfig = new AutoMapper.MapperConfiguration(config =>
+            {
+                config.AddProfile(new ApplicationProfile());
+            });
+            var mapper = autoConfig.CreateMapper();
+            services.AddSingleton(mapper);
             services.AddMvc();
             services.AddIdentity<User, Role>(config =>
             {
@@ -63,23 +75,26 @@ namespace Omac.Web
                 });
                 //options.AddPolicy("Over18", policy => policy.Requirements.Add());
             });
-            services.AddDbContext<OmackContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("OmackDev")));
+            services.AddDbContext<OmackLogContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("Omack-Log")));
+            services.AddDbContext<OmackContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("Omack-Dev")));
             //Scoped - one object for all request from specific client.
             // ItemService:  IItemService,  OtherService:  IItemService 
             services.AddSingleton<UserService>();
-
             services.AddSingleton<IAuthorizationHandler, IsGroupAdminHandler>();
             services.AddScoped<IItemService, ItemService>();
+            services.AddScoped<GroupService>();
             services.AddScoped<UnitOfWork>();
             services.AddScoped<SiteUtils>();
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
-        {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
+        {            
+            loggerFactory.AddNLog();
+            LogManager.Configuration.Variables["Omack-Log"] = Configuration.GetConnectionString("Omack-Log");
             if (env.IsDevelopment())
             {
+                //loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+                //loggerFactory.AddDebug();
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
             }
@@ -87,6 +102,7 @@ namespace Omac.Web
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+            app.AddNLogWeb();
             app.UseIdentity();
             app.UseStaticFiles();            
             app.UseMvc(routes =>
