@@ -33,7 +33,7 @@ namespace Omack.Web.Controllers
 
         public IActionResult Index()
         {
-            var groups = _groupService.GetAllByUserId(_siteUtils.CurrentUser());
+            var groups = _groupService.GetAll(_siteUtils.CurrentUser());
             
             return Ok(groups);
         }

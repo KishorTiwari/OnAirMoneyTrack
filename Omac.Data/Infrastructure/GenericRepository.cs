@@ -38,13 +38,7 @@ namespace Omack.Data.Infrastructure
         public TEntity GetById (int id)
         {
             return dbSet.Find(id);  
-        }   
-        
-        public TEntity GetById (int id, Expression<Func<TEntity, bool>> filter = null)
-        {
-            return dbSet.SingleOrDefault(filter);
-        }
-
+        }         
         public void Add(TEntity entity)
         {
             dbSet.Add(entity);

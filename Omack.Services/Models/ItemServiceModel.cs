@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Omack.Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,7 +11,7 @@ namespace Omack.Services.Models
         public string Name { get; set; }
         public decimal Price { get; set; }
         public DateTime DateOfPurchase { get; set; }
-        public int ItemType { get; set; }
+        public ItemType ItemType { get; set; }
         public Boolean IsActive { get; set; }
 
         public int UserId { get; set; }

@@ -8,9 +8,6 @@ namespace Omack.Web.ViewModels
 {
     public class UserLoginModel
     {
-        [Display(Name = "Name")]
-        public string UserName { get; set; }
-
         [Required]
         [Display(Name = "Email")]
         [DataType(DataType.EmailAddress)]

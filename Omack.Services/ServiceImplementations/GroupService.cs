@@ -18,7 +18,6 @@ namespace Omack.Services.ServiceImplementations
         private UnitOfWork _unitOfWork;
         private IMapper _mapper;
         private ILogger<GroupService> _logger;
-
         public GroupService(UnitOfWork unitOfWork, IMapper mapper, ILogger<GroupService> logger)
         {
             _mapper = mapper;
@@ -31,7 +30,6 @@ namespace Omack.Services.ServiceImplementations
             var result = new Result<GroupServiceModel>();           
             try
             {
-                throw new ArgumentNullException();
                 //No mapping. Because system properties shouldn't be null. 
                 var newGroup = new Group()
                 {
@@ -64,7 +62,7 @@ namespace Omack.Services.ServiceImplementations
             }
             catch(Exception ex)
             {
-                _logger.LogCritical($"Error: {ex}");
+                _logger.LogError(ex.InnerException.Message);
                 result.IsSuccess = false;
                 result.ErrorMessage = "Sorry. Something went wrong when adding a group.";
                 return result;
@@ -75,7 +73,7 @@ namespace Omack.Services.ServiceImplementations
             var result = new Result<GroupServiceModel>();
             try
             {
-                var dbGroup = _unitOfWork.GroupRepository.GetById(Id, x => x.IsActive == true && x.Id == Id && x.Group_Users.All(y => y.UserId == currentUser.Id && y.IsActive == true));
+                var dbGroup = _unitOfWork.GroupRepository.GetSingle(x =>x.Id == Id && x.IsActive && x.Id == Id && x.Group_Users.All(y => y.UserId == currentUser.Id && y.IsActive == true));
                 if(dbGroup != null)
                 {
                     //IsActive to false for group
@@ -108,12 +106,13 @@ namespace Omack.Services.ServiceImplementations
             }
             catch(Exception ex)
             {
+                _logger.LogError(ex.InnerException.Message);
                 result.IsSuccess = false;
                 result.ErrorMessage = "Something went wrong while deleting group.";
                 return result;
             }
         }
-        public Result<IQueryable<GroupServiceModel>> GetAllByUserId(CurrentUser currentUser)
+        public Result<IQueryable<GroupServiceModel>> GetAll(CurrentUser currentUser)
         {
             var result = new Result<IQueryable<GroupServiceModel>>();
             try
@@ -145,6 +144,7 @@ namespace Omack.Services.ServiceImplementations
             }
             catch(Exception ex)
             {
+                _logger.LogError(ex.InnerException.Message);
                 result.IsSuccess = false;
                 result.ErrorMessage = "Something went wrong while fetching data from database";
                 return result;
@@ -155,7 +155,7 @@ namespace Omack.Services.ServiceImplementations
             var result = new Result<GroupServiceModel>();
             try
             {
-                var dbGroup = _unitOfWork.GroupRepository.GetById(id, x => x.IsActive == true && x.Group_Users.All(y => y.IsActive == true && y.UserId == currentUser.Id));
+                var dbGroup = _unitOfWork.GroupRepository.GetSingle(x =>x.Id == id && x.IsActive == true && x.Group_Users.All(y => y.IsActive == true && y.UserId == currentUser.Id));
                 if(dbGroup == null)
                 {
                     result.IsSuccess = false;
@@ -173,6 +173,7 @@ namespace Omack.Services.ServiceImplementations
             }
             catch(Exception ex)
             {
+                _logger.LogError(ex.InnerException.Message);
                 result.IsSuccess = false;
                 result.ErrorMessage = "Something went wrong while fetching data.";
                 return result;
@@ -200,6 +201,7 @@ namespace Omack.Services.ServiceImplementations
             }
             catch(Exception ex)
             {
+                _logger.LogError(ex.InnerException.Message);
                 result.IsSuccess = false;
                 result.ErrorMessage = "Something went wrong while updating group";
                 return result;

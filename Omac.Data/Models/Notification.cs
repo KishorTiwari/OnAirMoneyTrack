@@ -12,12 +12,15 @@ namespace Omack.Data.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        [Required]
         [MaxLength(250)]
         public string Description { get; set; } // "{user name} has paid {amount}."
         public Boolean IsActive { get; set; }
 
         //Foreign Keys
+        [Required]
         public int UserId { get; set; }
+        [Required]
         public int GroupId { get; set; }
         
         

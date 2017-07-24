@@ -20,6 +20,7 @@ namespace Omack.Data.Models
         public DateTime DateOfPurchase { get; set; }
         [Required]
         public int ItemType { get; set; }
+        [Required]
         public Boolean  IsActive { get; set; }
         
         //Foreign Keys

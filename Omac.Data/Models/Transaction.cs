@@ -11,15 +11,21 @@ namespace Omack.Data.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+        [Required]
         public decimal Amount { get; set; }
+        [Required]
         public int TypeId { get; set; } //[Private Or Public]
         public int? ReceiverId { get; set; }  
         public int? SenderId { get; set; }
+        [Required]
         public Boolean  IsComplete { get; set; }
+        [Required]
         public Boolean IsActive { get; set; }
 
         //Foreign Keys
+        [Required]
         public int UserId { get; set; }
+        [Required]
         public int GroupId { get; set; }
 
         //Navigation Properties

@@ -8,9 +8,10 @@ using Omack.Data.DAL;
 namespace Omack.Data.OmackMigration
 {
     [DbContext(typeof(OmackContext))]
-    partial class OmackContextModelSnapshot : ModelSnapshot
+    [Migration("20170714064315_set-not-null-fields")]
+    partial class setnotnullfields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
