@@ -43,7 +43,7 @@ namespace Omack.Api
         {
             // Add framework services.
             //add MVC with some modifications if needed.
-            services.AddSingleton<IConfigurationRoot>(provider => Configuration);
+            services.AddSingleton(Configuration);
             services.AddMvc()
                     .AddMvcOptions(o =>
                     {
