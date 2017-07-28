@@ -17,6 +17,9 @@ using Omack.Data.DAL;
 using NLog;
 using Omack.Services.ServiceImplementations;
 using Omack.Services.Services;
+using Omack.Data.Models;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Omack.Api
 {
@@ -40,6 +43,7 @@ namespace Omack.Api
         {
             // Add framework services.
             //add MVC with some modifications if needed.
+            services.AddSingleton<IConfigurationRoot>(provider => Configuration);
             services.AddMvc()
                     .AddMvcOptions(o =>
                     {
@@ -47,6 +51,7 @@ namespace Omack.Api
                     });
             services.AddDbContext<OmackContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("Omack-Dev")));
             services.AddDbContext<OmackLogContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("Omack-Log")));
+            services.AddIdentity<User, Role>().AddEntityFrameworkStores<OmackContext, int>();
             services.AddScoped<UnitOfWork>();
             services.AddScoped<GroupService>();
             //sets the default camelcase format for returned json result to null, which will finally depened upon C# object's property names
@@ -68,6 +73,20 @@ namespace Omack.Api
             loggerFactory.AddNLog(); //buildin extension for Nlog
             LogManager.Configuration.Variables["Omack-Log"] = Configuration.GetConnectionString("Omack-Log");
             app.AddNLogWeb();
+            var test = Configuration["Tokens:Issuer"];
+            app.UseJwtBearerAuthentication(new JwtBearerOptions()
+            {
+                AutomaticAuthenticate = true,
+                AutomaticChallenge = true,
+                TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+                {
+                    ValidIssuer = Configuration["Tokens:Issuer"],
+                    ValidAudience = Configuration["Tokens:Audience"],
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"])),
+                    ValidateLifetime = true
+                }
+            });
             app.UseStatusCodePages();  //to show status code to the browser. Otherwise we have to look through console to inspect status code.
             app.UseMvc();
         }

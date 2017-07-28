@@ -10,6 +10,14 @@ using Omack.Data.Infrastructure;
 using Omack.Services.Services;
 using Omack.Core.Models;
 using Omack.Services.ServiceImplementations;
+using Microsoft.AspNetCore.Identity;
+using Omack.Data.Models;
+using Omack.Api.ViewModels;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Omack.Api.Controllers
 {
@@ -18,13 +26,19 @@ namespace Omack.Api.Controllers
     {
         private UnitOfWork _unitOfWork; //
         private ILogger<ValuesController> _logger; //Ilogger service is implemented by default, so we don't have to add it as service but we can configure in ConfigureServices method in startup.cs.
-       
+        private UserManager<User> _userManager;
+        private IPasswordHasher<User> _hasher;
+
         public ValuesController(ILogger<ValuesController> logger, 
-                                UnitOfWork unitOfWork
+                                UnitOfWork unitOfWork,
+                                UserManager<User> userManager, 
+                                IPasswordHasher<User> hasher
                                 ) //d.I through constructor....also called as container 
         {
             this._logger = logger;
             this._unitOfWork = unitOfWork;//new UnitOfWork();
+            _userManager = userManager;
+            _hasher = hasher;
         }
         //[HttpGet()]
         public JsonResult GetItemsTest()
@@ -35,6 +49,7 @@ namespace Omack.Api.Controllers
             //Note: it will never return not found, though list doesn't have any items in its list. It will return emply string with 200 status code. 
         }
 
+        [Authorize]
         [HttpGet()]
         public IActionResult GetItems()
         {
@@ -144,6 +159,5 @@ namespace Omack.Api.Controllers
          _unitOfWork.Dispose();
          base.Dispose(disposing);
       }
-
     }
 }

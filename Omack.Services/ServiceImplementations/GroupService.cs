@@ -27,7 +27,10 @@ namespace Omack.Services.ServiceImplementations
 
         public Result<GroupServiceModel> Add(GroupServiceModel group, CurrentUser currentUser)
         {
-            var result = new Result<GroupServiceModel>();           
+            var result = new Result<GroupServiceModel>();
+
+            //initialize transaction 
+            var transaction = _unitOfWork.BeginTransaction();
             try
             {
                 //No mapping. Because system properties shouldn't be null. 
@@ -53,6 +56,9 @@ namespace Omack.Services.ServiceImplementations
                 _unitOfWork.GroupUserRepository.Add(newGroupUser);
                 _unitOfWork.Save();
 
+                //commit transaction
+                transaction.commit();
+
                 //return mapped new group
                 var mappedNewGroup = _mapper.Map<GroupServiceModel>(newGroup); 
 
@@ -62,6 +68,8 @@ namespace Omack.Services.ServiceImplementations
             }
             catch(Exception ex)
             {
+                //rollback transaction
+                transaction.Rollback();
                 _logger.LogError(ex.InnerException.Message);
                 result.IsSuccess = false;
                 result.ErrorMessage = "Sorry. Something went wrong when adding a group.";
@@ -71,30 +79,37 @@ namespace Omack.Services.ServiceImplementations
         public Result<GroupServiceModel> Delete(int Id, CurrentUser currentUser)
         {
             var result = new Result<GroupServiceModel>();
+
+            //initialize transaction
+            var transaction = _unitOfWork.BeginTransaction();
+
             try
-            {
+            {               
                 var dbGroup = _unitOfWork.GroupRepository.GetSingle(x =>x.Id == Id && x.IsActive && x.Id == Id && x.Group_Users.All(y => y.UserId == currentUser.Id && y.IsActive == true));
                 if(dbGroup != null)
-                {
+                {                   
                     //IsActive to false for group
                     dbGroup.IsActive = false;
                     dbGroup.UpdatedBy = currentUser.Id;
                     dbGroup.UpdatedOn = DateTime.UtcNow;
+                    _unitOfWork.Save();
 
                     //IsActive to false for GroupUser 
-                    var dbGroupUser = _unitOfWork.GroupUserRepository.GetSingle(x => x.Group.Id == dbGroup.Id && x.Group.IsActive);
+                    var dbGroupUser = _unitOfWork.GroupUserRepository.GetSingle(x => x.Group.Id == dbGroup.Id && x.UserId == currentUser.Id);
                     dbGroupUser.IsActive = false;
                     dbGroupUser.UpdatedBy = currentUser.Id;
                     dbGroupUser.UpdatedOn = DateTime.UtcNow;
 
-                    _unitOfWork.GroupRepository.Update(dbGroup);
+                   // _unitOfWork.GroupRepository.Update(dbGroup);
                     _unitOfWork.Save();
 
+                    //commit transaction
+                    transaction.commit();
+
                     //return deleted Group
-                    var updatedGroup = _mapper.Map<GroupServiceModel>(dbGroup);                  
+                    var updatedGroup = _mapper.Map<GroupServiceModel>(dbGroup);                     
                     result.IsSuccess = true;
                     result.Data = updatedGroup;
-
                     return result;
                 }
                 else
@@ -106,6 +121,7 @@ namespace Omack.Services.ServiceImplementations
             }
             catch(Exception ex)
             {
+                transaction.Rollback();
                 _logger.LogError(ex.InnerException.Message);
                 result.IsSuccess = false;
                 result.ErrorMessage = "Something went wrong while deleting group.";

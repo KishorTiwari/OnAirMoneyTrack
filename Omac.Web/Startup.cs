@@ -71,7 +71,7 @@ namespace Omac.Web
                 options.AddPolicy("Admin", policy =>
                 {
                     policy.Requirements.Add(new IsGroupAdmin());
-                    policy.RequireClaim("Admin", "Admin");
+                   // policy.RequireClaim("Admin", "Admin");
                 });
                 //options.AddPolicy("Over18", policy => policy.Requirements.Add());
             });
