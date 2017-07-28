@@ -13,12 +13,13 @@ namespace Omack.Data.Infrastructure
         private GroupRepository groupRepository;
         private GroupUserRepository groupUserRepository;
         private ItemRepository itemRepository;
+        private MediaRepository mediaRepository;
         private TransactionRepository transactionRepository;
         public UnitOfWork(OmackContext omackContext)
         {
             _context = omackContext;
         }
-        //Group Repository
+
         public GroupRepository GroupRepository
         {
             get
@@ -30,7 +31,17 @@ namespace Omack.Data.Infrastructure
                 return groupRepository;
             }
         }
-        //Item Repository
+        public GroupUserRepository GroupUserRepository
+        {
+            get
+            {
+                if (this.groupUserRepository == null)
+                {
+                    this.groupUserRepository = new GroupUserRepository(_context);
+                }
+                return groupUserRepository;
+            }
+        }
         public ItemRepository ItemRepository
         {
             get
@@ -40,6 +51,18 @@ namespace Omack.Data.Infrastructure
                     this.itemRepository = new ItemRepository(_context);
                 }
                 return itemRepository;
+            }
+        }
+        public MediaRepository MediaRepository
+        {
+            get
+            {
+                if(mediaRepository == null)
+                {
+                    mediaRepository = new MediaRepository(_context);
+                    return mediaRepository;
+                }
+                return mediaRepository;
             }
         }
         public TransactionRepository TransactionRepository
@@ -53,24 +76,13 @@ namespace Omack.Data.Infrastructure
                 return transactionRepository;
             }
         }
-        public GroupUserRepository GroupUserRepository
-        {
-            get
-            {
-                if(this.groupUserRepository == null)
-                {
-                    this.groupUserRepository = new GroupUserRepository(_context);
-                }
-                return groupUserRepository;
-            }
-        }
+
+
         public void Save()
         {
             _context.SaveChanges(); //save changes to the db.
         }
         private bool disposed = false;  //initially set disposed to false.
-
-
         void Dispose(bool disposing)
         {
             if (!this.disposed)
@@ -82,11 +94,16 @@ namespace Omack.Data.Infrastructure
             }
             this.disposed = true;   //changed it to true once it is disposed
         }
-
         public void Dispose() //gets called everytime the unitofwork is called. Because it is of IDisposable type
         {
             Dispose(true); //call above method Dispose(bool disposing). Remember that method is valid because it has different methods. AKA overload methods.
             GC.SuppressFinalize(this);
+        }
+
+        //Return IDbContextTransaction (using Microsoft.EntityFrameworkCore.Storage;)
+        public IDatabaseTransaction BeginTransaction()
+        {
+            return new DatabaseTransaction(_context);
         }
     }
 }

@@ -26,9 +26,18 @@ namespace Omack.Web.Site
             {
                 Id = _currentUser.Id,
                 Name = _currentUser.UserName,
-                Email = _currentUser.Email
+                Email = _currentUser.Email,               
             };
             return user;
+        }
+        public CurrentGroup CurrentGroup()
+        {
+            var group = new CurrentGroup()
+            {
+                Id = 1,
+                Name = "Some name"
+            };
+            return group;
         }
     }
 }

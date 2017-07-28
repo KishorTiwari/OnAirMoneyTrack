@@ -32,16 +32,15 @@ namespace Omack.Services.ServiceImplementations
         public bool IsAdmin() 
         {
             var userId = Convert.ToInt32(_userManager.GetUserId(_context.HttpContext.User));
-            var usrGroup = _dbContext.Group_User.Where(x => x.UserId == _currentUser.Id && x.GroupId == 1 && x.IsAdmin && x.IsActive);
-            if(usrGroup == null)
-            {
-                return false;
-            }
-            if (usrGroup.Any())
+            var usrGroup = _dbContext.Group_User.Where(x => x.UserId == _currentUser.Id && x.GroupId == 14 && x.IsAdmin && x.IsActive);
+            if(usrGroup.Any())
             {
                 return true;
             }
-            return false;
+            else
+            {
+                return false;
+            }
         }
         public IQueryable<User> GetAllUsersByGroupId(int groupId)
         {

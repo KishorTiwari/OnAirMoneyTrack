@@ -11,9 +11,13 @@ namespace Omack.Data.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+        [Required]
         public Guid Guid { get; set; }
+        [Required]
         public string Url { get; set; }
+        [Required]
         public int TypeId { get; set; }
+        [Required]
         public Boolean IsActive { get; set; }
 
         //Nav Properties

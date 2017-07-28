@@ -33,7 +33,7 @@ namespace Omack.Web.Controllers
 
         public IActionResult Index()
         {
-            var groups = _groupService.GetAllByUserId(_siteUtils.CurrentUser());
+            var groups = _groupService.GetAll(_siteUtils.CurrentUser());
             
             return Ok(groups);
         }
@@ -60,6 +60,15 @@ namespace Omack.Web.Controllers
                 return Ok($"Error: {result.ErrorMessage}");
             }
             
+        }
+        public IActionResult Delete(int Id)
+        {
+            var result = _groupService.Delete(Id, _siteUtils.CurrentUser());
+            if (result.IsSuccess)
+            {
+                return Ok(result.Data);
+            }
+            return Ok(result.ErrorMessage);
         }
     }
 }

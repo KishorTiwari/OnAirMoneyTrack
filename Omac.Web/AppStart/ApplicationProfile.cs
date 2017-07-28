@@ -15,6 +15,12 @@ namespace Omack.Web.AppStart
         {
             CreateMap<Group, GroupServiceModel>().ReverseMap();
             CreateMap<GroupViewModel, GroupServiceModel>().ReverseMap();
+
+            CreateMap<Item, ItemServiceModel>().ReverseMap();
+            CreateMap<ItemServiceModel, ItemViewModel>().ReverseMap();
+
+            CreateMap<Media, MediaServiceModel>().ReverseMap();
+            CreateMap<MediaServiceModel, MediaViewModel>().ReverseMap();
         }
     }
 }

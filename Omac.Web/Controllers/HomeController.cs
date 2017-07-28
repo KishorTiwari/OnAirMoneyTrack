@@ -43,23 +43,20 @@ namespace Omac.Web.Controllers
                 Name = "Milk",
                 Price = 15,
                 DateOfPurchase = DateTime.UtcNow,
-                ItemType = 1,
+                ItemType = (Omack.Core.Enums.ItemType)1,
                 UserId = 2,
                 GroupId = 10,
                 MediaId = 1
             };
-            _itemService.Add(item);
+            _itemService.Add(_siteUtils.CurrentUser(), _siteUtils.CurrentGroup(),item);
             return Ok(item);
         }
 
         [Authorize]
         public IActionResult Index(int? Id)
         {
-            var cookies = Request.Cookies;
-
-            var claims = HttpContext.User.Claims;
-
-            return Ok(claims);
+            var user = _siteUtils.CurrentUser();
+            return Ok($"Your Details:{user.Name}, {user.Email}");
         }
 
         public IActionResult About()

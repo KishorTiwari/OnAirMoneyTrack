@@ -11,11 +11,15 @@ namespace Omack.Data.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+        [Required]
         public Boolean IsActive { get; set; }
+        [Required]
         public Boolean IsAdmin { get; set; }
 
         //Foreign Keys
+        [Required]
         public int GroupId { get; set; }
+        [Required]
         public int UserId { get; set; }
 
         //Navigation Properties
