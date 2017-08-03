@@ -50,7 +50,7 @@ namespace Omack.Api.Controllers
                             issuer: _config["Tokens:Issuer"],
                             audience: _config["Tokens:Audience"],
                             claims: claims,
-                            expires: DateTime.UtcNow.AddMinutes(15),
+                            expires: DateTime.UtcNow.AddDays(30),
                             signingCredentials: creds
                             );
                         return Ok(

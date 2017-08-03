@@ -15,6 +15,7 @@ namespace Omack.Data.Infrastructure
         private ItemRepository itemRepository;
         private MediaRepository mediaRepository;
         private TransactionRepository transactionRepository;
+        private UserRepository userRepository;
         public UnitOfWork(OmackContext omackContext)
         {
             _context = omackContext;
@@ -76,13 +77,24 @@ namespace Omack.Data.Infrastructure
                 return transactionRepository;
             }
         }
-
+        public UserRepository UserRepository
+        {
+            get
+            {
+                if(this.userRepository == null)
+                {
+                    this.userRepository = new UserRepository(_context);
+                }
+                return userRepository;
+            }
+        }
 
         public void Save()
         {
             _context.SaveChanges(); //save changes to the db.
         }
         private bool disposed = false;  //initially set disposed to false.
+
         void Dispose(bool disposing)
         {
             if (!this.disposed)

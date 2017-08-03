@@ -20,6 +20,8 @@ using Omack.Services.Services;
 using Omack.Data.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Omack.Core;
+using Omack.Api.AppStart;
 
 namespace Omack.Api
 {
@@ -41,8 +43,12 @@ namespace Omack.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add framework services.
-            //add MVC with some modifications if needed.
+            var autoConfig = new AutoMapper.MapperConfiguration(config =>
+            {
+                config.AddProfile(new ApplicationProfile());
+            });
+            var mapper = autoConfig.CreateMapper();
+            services.AddSingleton(mapper);
             services.AddSingleton(Configuration);
             services.AddMvc()
                     .AddMvcOptions(o =>
@@ -53,7 +59,9 @@ namespace Omack.Api
             services.AddDbContext<OmackLogContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("Omack-Log")));
             services.AddIdentity<User, Role>().AddEntityFrameworkStores<OmackContext, int>();
             services.AddScoped<UnitOfWork>();
-            services.AddScoped<GroupService>();
+            services.AddScoped<IGroupService, GroupService>();
+            services.AddSingleton<SiteUtils>();
+            services.AddScoped<UserService>();
             //sets the default camelcase format for returned json result to null, which will finally depened upon C# object's property names
             //.AddJsonOptions(o =>
             //{
@@ -73,6 +81,7 @@ namespace Omack.Api
             loggerFactory.AddNLog(); //buildin extension for Nlog
             LogManager.Configuration.Variables["Omack-Log"] = Configuration.GetConnectionString("Omack-Log");
             app.AddNLogWeb();
+            app.UseIdentity();
             var test = Configuration["Tokens:Issuer"];
             app.UseJwtBearerAuthentication(new JwtBearerOptions()
             {
