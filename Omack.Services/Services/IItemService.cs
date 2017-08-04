@@ -11,9 +11,9 @@ namespace Omack.Services.Services
     public interface IItemService
     {
         Result<IQueryable<ItemServiceModel>> GetAll(CurrentUser currentUser, CurrentGroup currentGroup);
-        Result<ItemServiceModel> GetById(CurrentUser currentUser, CurrentGroup currentGroup, int id);
-        Result<ItemServiceModel> Add(CurrentUser currentUser, CurrentGroup currentGroup, ItemServiceModel item);
-        Result<ItemServiceModel> Update(CurrentUser currentUser, CurrentGroup currentGroup, ItemServiceModel item);
-        Result<ItemServiceModel> Delete(CurrentUser currentUser, CurrentGroup currentGroup, int Id);
+        Result<ItemServiceModel> GetById(int id, CurrentUser currentUser, CurrentGroup currentGroup);
+        Result<ItemServiceModel> Add(ItemServiceModel item, CurrentUser currentUser, CurrentGroup currentGroup);
+        Result<ItemServiceModel> Update(ItemServiceModel item, CurrentUser currentUser, CurrentGroup currentGroup);
+        Result<ItemServiceModel> Delete(int id, CurrentUser currentUser, CurrentGroup currentGroup);
     }
 }

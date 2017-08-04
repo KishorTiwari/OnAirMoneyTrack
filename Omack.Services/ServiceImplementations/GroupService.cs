@@ -10,14 +10,18 @@ using System.Linq;
 using Omack.Core.Models;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
+using Omack.Core.Constants;
 
 namespace Omack.Services.ServiceImplementations
 {
     public class GroupService : IGroupService
     {
+        //private fields
         private UnitOfWork _unitOfWork;
         private IMapper _mapper;
         private ILogger<GroupService> _logger;
+
+        //Constructor
         public GroupService(UnitOfWork unitOfWork, IMapper mapper, ILogger<GroupService> logger)
         {
             _mapper = mapper;
@@ -25,6 +29,7 @@ namespace Omack.Services.ServiceImplementations
             _logger = logger;
         }
 
+        //Functions
         public Result<GroupServiceModel> Add(GroupServiceModel group, CurrentUser currentUser)
         {
             var result = new Result<GroupServiceModel>();
@@ -39,9 +44,9 @@ namespace Omack.Services.ServiceImplementations
                     Name = group.Name,
                     IsActive = true,
                     MediaId = group.MediaId,
-                    CreatedOn = DateTime.UtcNow,
+                    CreatedOn = Application.CurrentDate,
                     CreatedBy = currentUser.Id,
-                    UpdatedOn = DateTime.UtcNow,
+                    UpdatedOn = Application.CurrentDate,
                     UpdatedBy = currentUser.Id
                 };
                 _unitOfWork.GroupRepository.Add(newGroup);
@@ -72,10 +77,11 @@ namespace Omack.Services.ServiceImplementations
                 transaction.Rollback();
                 _logger.LogError(ex.InnerException.Message);
                 result.IsSuccess = false;
-                result.ErrorMessage = "Sorry. Something went wrong when adding a group.";
+                result.ErrorMessage = ErrorMessage.Add;
                 return result;
             }          
         }
+
         public Result<GroupServiceModel> Delete(int Id, CurrentUser currentUser)
         {
             var result = new Result<GroupServiceModel>();
@@ -91,14 +97,14 @@ namespace Omack.Services.ServiceImplementations
                     //IsActive to false for group
                     dbGroup.IsActive = false;
                     dbGroup.UpdatedBy = currentUser.Id;
-                    dbGroup.UpdatedOn = DateTime.UtcNow;
+                    dbGroup.UpdatedOn = Application.CurrentDate;
                     _unitOfWork.Save();
 
                     //IsActive to false for GroupUser 
                     var dbGroupUser = _unitOfWork.GroupUserRepository.GetSingle(x => x.Group.Id == dbGroup.Id && x.UserId == currentUser.Id);
                     dbGroupUser.IsActive = false;
                     dbGroupUser.UpdatedBy = currentUser.Id;
-                    dbGroupUser.UpdatedOn = DateTime.UtcNow;
+                    dbGroupUser.UpdatedOn = Application.CurrentDate;
 
                    // _unitOfWork.GroupRepository.Update(dbGroup);
                     _unitOfWork.Save();
@@ -115,7 +121,7 @@ namespace Omack.Services.ServiceImplementations
                 else
                 {
                     result.IsSuccess = false;
-                    result.ErrorMessage = "Sorry. This group doesn't belongs to you or it doesn't exists.";
+                    result.ErrorMessage = ErrorMessage.DeleteUnAuth;
                     return result;
                 }
             }
@@ -124,10 +130,11 @@ namespace Omack.Services.ServiceImplementations
                 transaction.Rollback();
                 _logger.LogError(ex.InnerException.Message);
                 result.IsSuccess = false;
-                result.ErrorMessage = "Something went wrong while deleting group.";
+                result.ErrorMessage = ErrorMessage.Delete;
                 return result;
             }
         }
+
         public Result<IQueryable<GroupServiceModel>> GetAll(CurrentUser currentUser)
         {
             var result = new Result<IQueryable<GroupServiceModel>>();
@@ -154,7 +161,7 @@ namespace Omack.Services.ServiceImplementations
                 else
                 {
                     result.IsSuccess = false;
-                    result.ErrorMessage = "Sorry. You don't have any groups";
+                    result.ErrorMessage = ErrorMessage.GetUnAuth;
                     return result;
                 }
             }
@@ -162,10 +169,11 @@ namespace Omack.Services.ServiceImplementations
             {
                 _logger.LogError(ex.InnerException.Message);
                 result.IsSuccess = false;
-                result.ErrorMessage = "Something went wrong while fetching data from database";
+                result.ErrorMessage = ErrorMessage.Get;
                 return result;
             }
         }
+
         public Result<GroupServiceModel> GetById(int id, CurrentUser currentUser)
         {
             var result = new Result<GroupServiceModel>();
@@ -175,7 +183,7 @@ namespace Omack.Services.ServiceImplementations
                 if(dbGroup == null)
                 {
                     result.IsSuccess = false;
-                    result.ErrorMessage = "Sorry. This group doesn't exists or it doesn't belongs to you.";
+                    result.ErrorMessage = ErrorMessage.GetUnAuth;
                     return result;
                 }
                 else
@@ -191,35 +199,47 @@ namespace Omack.Services.ServiceImplementations
             {
                 _logger.LogError(ex.InnerException.Message);
                 result.IsSuccess = false;
-                result.ErrorMessage = "Something went wrong while fetching data.";
+                result.ErrorMessage = ErrorMessage.Get;
                 return result;
             }
         }
+
         public Result<GroupServiceModel> Update(GroupServiceModel groupModel, CurrentUser currentUser)
         {
             var result = new Result<GroupServiceModel>();
             try
             {
-                var group = _mapper.Map<Group>(groupModel);
+                var groupEntity = _unitOfWork.GroupRepository.GetSingle(x => x.Id == groupModel.Id && x.IsActive);
 
-                //append system properties as mapper map to null
-                group.UpdatedBy = currentUser.Id;
-                group.UpdatedOn = DateTime.UtcNow;
+                if(groupEntity != null)
+                {
+                    var group = _mapper.Map<Group>(groupModel);
 
-                _unitOfWork.GroupRepository.Update(group);
-                _unitOfWork.Save();
+                    //append system properties as mapper map to null
+                    group.UpdatedBy = currentUser.Id;
+                    group.UpdatedOn = Application.CurrentDate;
 
-                //map it to GroupServiceModel 
-                var updatedGroup = _mapper.Map<GroupServiceModel>(group);
-                result.IsSuccess = true;
-                result.Data = updatedGroup;
-                return result;
+                    _unitOfWork.GroupRepository.Update(group);
+                    _unitOfWork.Save();
+
+                    //map it to GroupServiceModel 
+                    var updatedGroup = _mapper.Map<GroupServiceModel>(group);
+                    result.IsSuccess = true;
+                    result.Data = updatedGroup;
+                    return result;
+                }
+                else
+                {
+                    result.IsSuccess = false;
+                    result.ErrorMessage = ErrorMessage.UpdateUnAuth;
+                    return result;
+                }               
             }
             catch(Exception ex)
             {
                 _logger.LogError(ex.InnerException.Message);
                 result.IsSuccess = false;
-                result.ErrorMessage = "Something went wrong while updating group";
+                result.ErrorMessage = ErrorMessage.Update;
                 return result;
             }
         }

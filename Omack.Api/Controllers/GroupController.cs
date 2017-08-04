@@ -38,7 +38,7 @@ namespace Omack.Api.Controllers
                 var group = result.Data;
                 return Ok(group);
             }
-            return BadRequest();
+            return BadRequest(result.ErrorMessage);
         }
 
         [HttpGet()]
