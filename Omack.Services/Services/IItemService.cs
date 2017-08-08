@@ -10,10 +10,10 @@ namespace Omack.Services.Services
 {
     public interface IItemService
     {
-        Result<IQueryable<ItemServiceModel>> GetAll(CurrentUser currentUser, CurrentGroup currentGroup);
-        Result<ItemServiceModel> GetById(int id, CurrentUser currentUser, CurrentGroup currentGroup);
-        Result<ItemServiceModel> Add(ItemServiceModel item, CurrentUser currentUser, CurrentGroup currentGroup);
-        Result<ItemServiceModel> Update(ItemServiceModel item, CurrentUser currentUser, CurrentGroup currentGroup);
-        Result<ItemServiceModel> Delete(int id, CurrentUser currentUser, CurrentGroup currentGroup);
+        Result<IQueryable<ItemServiceModel>> GetAll(int userId, int groupId);
+        Result<ItemServiceModel> GetById(int id, int userId, int groupId);
+        Result<ItemServiceModel> Add(ItemServiceModel item, int userId, int groupId);
+        Result<ItemServiceModel> Update(ItemServiceModel item, int userId, int groupId);
+        Result<ItemServiceModel> Delete(int id, int userId, int groupId);
     }
 }

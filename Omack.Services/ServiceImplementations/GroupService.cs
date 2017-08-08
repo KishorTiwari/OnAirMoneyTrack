@@ -30,7 +30,7 @@ namespace Omack.Services.ServiceImplementations
         }
 
         //Functions
-        public Result<GroupServiceModel> Add(GroupServiceModel group, CurrentUser currentUser)
+        public Result<GroupServiceModel> Add(GroupServiceModel group, int userId)
         {
             var result = new Result<GroupServiceModel>();
 
@@ -45,9 +45,9 @@ namespace Omack.Services.ServiceImplementations
                     IsActive = true,
                     MediaId = group.MediaId,
                     CreatedOn = Application.CurrentDate,
-                    CreatedBy = currentUser.Id,
+                    CreatedBy = userId,
                     UpdatedOn = Application.CurrentDate,
-                    UpdatedBy = currentUser.Id
+                    UpdatedBy = userId
                 };
                 _unitOfWork.GroupRepository.Add(newGroup);
                 _unitOfWork.Save();
@@ -55,7 +55,7 @@ namespace Omack.Services.ServiceImplementations
                 var newGroupUser = new Group_User()
                 {
                     GroupId = newGroup.Id,
-                    UserId = currentUser.Id,
+                    UserId = userId,
                     IsActive = true
                 };
                 _unitOfWork.GroupUserRepository.Add(newGroupUser);
@@ -82,7 +82,7 @@ namespace Omack.Services.ServiceImplementations
             }          
         }
 
-        public Result<GroupServiceModel> Delete(int Id, CurrentUser currentUser)
+        public Result<GroupServiceModel> Delete(int Id, int userId)
         {
             var result = new Result<GroupServiceModel>();
 
@@ -135,7 +135,7 @@ namespace Omack.Services.ServiceImplementations
             }
         }
 
-        public Result<IQueryable<GroupServiceModel>> GetAll(CurrentUser currentUser)
+        public Result<IQueryable<GroupServiceModel>> GetAll(int userId)
         {
             var result = new Result<IQueryable<GroupServiceModel>>();
             try
@@ -174,7 +174,7 @@ namespace Omack.Services.ServiceImplementations
             }
         }
 
-        public Result<GroupServiceModel> GetById(int id, CurrentUser currentUser)
+        public Result<GroupServiceModel> GetById(int id, int userId)
         {
             var result = new Result<GroupServiceModel>();
             try
@@ -204,7 +204,7 @@ namespace Omack.Services.ServiceImplementations
             }
         }
 
-        public Result<GroupServiceModel> Update(GroupServiceModel groupModel, CurrentUser currentUser)
+        public Result<GroupServiceModel> Update(GroupServiceModel groupModel, int userId)
         {
             var result = new Result<GroupServiceModel>();
             try
@@ -216,7 +216,7 @@ namespace Omack.Services.ServiceImplementations
                     var group = _mapper.Map<Group>(groupModel);
 
                     //append system properties as mapper map to null
-                    group.UpdatedBy = currentUser.Id;
+                    group.UpdatedBy = userId;
                     group.UpdatedOn = Application.CurrentDate;
 
                     _unitOfWork.GroupRepository.Update(group);

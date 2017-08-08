@@ -23,6 +23,10 @@ namespace Omack.Web.AppStart
             CreateMap<MediaServiceModel, MediaViewModel>().ReverseMap();
 
             CreateMap<User, UserServiceModel>().ReverseMap();
+            CreateMap<User, UserServiceModel>().ReverseMap();
+
+            CreateMap<Transaction, TransactionServiceModel>().ReverseMap();
+            CreateMap<Notification, NotificationServiceModel>().ReverseMap();
         }
     }
 }

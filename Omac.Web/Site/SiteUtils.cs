@@ -20,24 +20,31 @@ namespace Omack.Web.Site
             _userManager = userManager;
             _currentUser = _userManager.GetUserAsync(_context.HttpContext.User).Result;
         }
-        public CurrentUser CurrentUser()
+
+        public CurrentUser CurrentUser
         {
-            var user = new CurrentUser()
+            get
             {
-                Id = _currentUser.Id,
-                Name = _currentUser.UserName,
-                Email = _currentUser.Email,               
-            };
-            return user;
+                return new CurrentUser()
+                {
+                    Id = _currentUser.Id,
+                    Name = _currentUser.UserName,
+                    Email = _currentUser.Email
+                };
+            }
         }
-        public CurrentGroup CurrentGroup()
+
+        public CurrentGroup CurrentGroup
         {
-            var group = new CurrentGroup()
+            get
             {
-                Id = 1,
-                Name = "Some name"
-            };
-            return group;
+                //to do
+                return new CurrentGroup
+                {
+                    Id = 1,
+                    Name = "Some name"
+                };
+            }
         }
     }
 }

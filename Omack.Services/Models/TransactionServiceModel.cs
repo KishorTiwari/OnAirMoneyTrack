@@ -8,7 +8,6 @@ namespace Omack.Services.Models
     {
         public int Id { get; set; }
         public decimal Amount { get; set; }
-        public int Type { get; set; }
         public int? ReceiverId { get; set; }
         public int? SenderId { get; set; }
         public Boolean IsComplete { get; set; }

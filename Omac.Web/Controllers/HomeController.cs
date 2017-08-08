@@ -48,7 +48,7 @@ namespace Omac.Web.Controllers
                 GroupId = 10,
                 MediaId = 1
             };
-            _itemService.Add(_siteUtils.CurrentUser(), _siteUtils.CurrentGroup(),item);
+            _itemService.Add(item,_siteUtils.CurrentUser, _siteUtils.CurrentGroup);
             return Ok(item);
         }
 

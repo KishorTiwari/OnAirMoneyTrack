@@ -11,10 +11,10 @@ namespace Omack.Services.Services
 {
     public interface IGroupService
     {
-        Result<IQueryable<GroupServiceModel>> GetAll(CurrentUser currentUser);
-        Result<GroupServiceModel> GetById(int id, CurrentUser currrentUser);
-        Result<GroupServiceModel> Add(GroupServiceModel group, CurrentUser currentUser);
-        Result<GroupServiceModel> Update(GroupServiceModel group, CurrentUser currentUser);
-        Result<GroupServiceModel> Delete(int Id, CurrentUser currentUser);
+        Result<IQueryable<GroupServiceModel>> GetAll(int userId);
+        Result<GroupServiceModel> GetById(int id, int userId);
+        Result<GroupServiceModel> Add(GroupServiceModel group, int userId);
+        Result<GroupServiceModel> Update(GroupServiceModel group, int userId);
+        Result<GroupServiceModel> Delete(int Id, int userId);
     }
 }

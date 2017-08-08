@@ -18,7 +18,7 @@ namespace Omack.Services.ServiceImplementations
 {
     public class ItemService : IItemService
     {
-        //private fields
+        //Private fields
         private UnitOfWork _unitOfWork;
         private ILogger<ItemService> _logger;
         private IMapper _mapper;
@@ -31,14 +31,14 @@ namespace Omack.Services.ServiceImplementations
             _mapper = mapper;
         }
 
-        //functions
-        public Result<IQueryable<ItemServiceModel>> GetAll(CurrentUser currentUser, CurrentGroup currentGroup)
+        //Functions
+        public Result<IQueryable<ItemServiceModel>> GetAll(int userId, int groupId)
         {
             var result = new Result<IQueryable<ItemServiceModel>>();
 
             try
             {
-                var items = _unitOfWork.ItemRepository.GetAll(x => x.IsActive && x.GroupId == currentGroup.Id);
+                var items = _unitOfWork.ItemRepository.GetAll(x => x.IsActive && x.GroupId == groupId);
                 if (items.Any())
                 {
                     var itemModels = _mapper.Map<IQueryable<ItemServiceModel>>(items);
@@ -62,12 +62,12 @@ namespace Omack.Services.ServiceImplementations
             }
         }
 
-        public Result<ItemServiceModel> GetById(int id, CurrentUser currentUser, CurrentGroup currentGroup)
+        public Result<ItemServiceModel> GetById(int id, int userId, int groupId)
         {
             var result = new Result<ItemServiceModel>();
             try
             {
-                var item = _unitOfWork.ItemRepository.GetSingle(x => x.Id == id && x.IsActive && x.UserId == currentUser.Id && x.GroupId == currentGroup.Id);
+                var item = _unitOfWork.ItemRepository.GetSingle(x => x.Id == id && x.IsActive && x.UserId == userId && x.GroupId == groupId);
 
                 if (item != null)
                 {
@@ -93,7 +93,7 @@ namespace Omack.Services.ServiceImplementations
             }
         }
 
-        public Result<ItemServiceModel> Add(ItemServiceModel item, CurrentUser currentUser, CurrentGroup currentGroup)
+        public Result<ItemServiceModel> Add(ItemServiceModel item, int userId, int groupId)
         {
             var result = new Result<ItemServiceModel>();
             try
@@ -105,11 +105,11 @@ namespace Omack.Services.ServiceImplementations
                     DateOfPurchase = item.DateOfPurchase,
                     ItemType = (int)item.ItemType,
                     IsActive = true,
-                    UserId = currentUser.Id,
-                    GroupId = currentGroup.Id,
+                    UserId = userId,
+                    GroupId = groupId,
                     MediaId = item.MediaId,
                     CreatedOn = Application.CurrentDate,
-                    CreatedBy = currentUser.Id
+                    CreatedBy = userId
                 };
                 _unitOfWork.ItemRepository.Add(newItem);
                 _unitOfWork.Save();
@@ -129,13 +129,13 @@ namespace Omack.Services.ServiceImplementations
             }
         }
 
-        public Result<ItemServiceModel> Update(ItemServiceModel itemModel, CurrentUser currentUser, CurrentGroup currentGroup)
+        public Result<ItemServiceModel> Update(ItemServiceModel itemModel, int userId, int groupId)
         {
             var result = new Result<ItemServiceModel>();
 
             try
             {
-                var itemEntity = _unitOfWork.ItemRepository.GetSingle(x => x.Id == itemModel.Id && x.IsActive && x.UserId == currentUser.Id && x.GroupId == currentGroup.Id);
+                var itemEntity = _unitOfWork.ItemRepository.GetSingle(x => x.Id == itemModel.Id && x.IsActive && x.UserId == userId && x.GroupId == groupId);
 
                 if (itemEntity != null)
                 {
@@ -146,7 +146,7 @@ namespace Omack.Services.ServiceImplementations
                     itemEntity.GroupId = itemModel.GroupId;
                     itemEntity.MediaId = itemModel.MediaId;
                     itemEntity.UpdatedOn = Application.CurrentDate;
-                    itemEntity.UpdatedBy = currentUser.Id;
+                    itemEntity.UpdatedBy = userId;
                     _unitOfWork.Save();
 
                     //map to service model after update
@@ -173,16 +173,16 @@ namespace Omack.Services.ServiceImplementations
             }
         }
 
-        public Result<ItemServiceModel> Delete(int id, CurrentUser currentUser, CurrentGroup currentGroup)
+        public Result<ItemServiceModel> Delete(int id, int userId, int groupId)
         {
             var result = new Result<ItemServiceModel>();
             try
             {
-                var itemEntity = _unitOfWork.ItemRepository.GetSingle(x => x.Id == id && x.IsActive && x.GroupId == currentGroup.Id);
+                var itemEntity = _unitOfWork.ItemRepository.GetSingle(x => x.Id == id && x.IsActive && x.GroupId == groupId);
                 if(itemEntity != null)
                 {
                     itemEntity.IsActive = false;
-                    itemEntity.UpdatedBy = currentUser.Id;
+                    itemEntity.UpdatedBy = userId;
                     itemEntity.UpdatedOn = Application.CurrentDate;
                     _unitOfWork.Save();
 
