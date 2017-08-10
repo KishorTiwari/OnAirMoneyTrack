@@ -32,7 +32,7 @@ namespace Omack.Api.Controllers
         [HttpGet("{id}", Name = "GetGroupById")]
         public IActionResult GetGroupById(int id)
         {
-            var result = _groupService.GetById(id, _siteUtils.CurrentUser);
+            var result = _groupService.GetById(id, _siteUtils.CurrentUser.Id);
             if (result.IsSuccess)
             {
                 var group = result.Data;
@@ -44,7 +44,7 @@ namespace Omack.Api.Controllers
         [HttpGet()]
         public IActionResult GetGroups()
         {
-            var result = _groupService.GetAll(_siteUtils.CurrentUser);
+            var result = _groupService.GetAll(_siteUtils.CurrentUser.Id);
             if (result.IsSuccess)
             {
                 return Ok(result.Data);

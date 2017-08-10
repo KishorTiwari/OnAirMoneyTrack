@@ -91,19 +91,19 @@ namespace Omack.Services.ServiceImplementations
 
             try
             {               
-                var dbGroup = _unitOfWork.GroupRepository.GetSingle(x =>x.Id == Id && x.IsActive && x.Id == Id && x.Group_Users.All(y => y.UserId == currentUser.Id && y.IsActive == true));
+                var dbGroup = _unitOfWork.GroupRepository.GetSingle(x =>x.Id == Id && x.IsActive && x.Id == Id && x.Group_Users.All(y => y.UserId == userId && y.IsActive == true));
                 if(dbGroup != null)
                 {                   
                     //IsActive to false for group
                     dbGroup.IsActive = false;
-                    dbGroup.UpdatedBy = currentUser.Id;
+                    dbGroup.UpdatedBy = userId;
                     dbGroup.UpdatedOn = Application.CurrentDate;
                     _unitOfWork.Save();
 
                     //IsActive to false for GroupUser 
-                    var dbGroupUser = _unitOfWork.GroupUserRepository.GetSingle(x => x.Group.Id == dbGroup.Id && x.UserId == currentUser.Id);
+                    var dbGroupUser = _unitOfWork.GroupUserRepository.GetSingle(x => x.Group.Id == dbGroup.Id && x.UserId == userId);
                     dbGroupUser.IsActive = false;
-                    dbGroupUser.UpdatedBy = currentUser.Id;
+                    dbGroupUser.UpdatedBy = userId;
                     dbGroupUser.UpdatedOn = Application.CurrentDate;
 
                    // _unitOfWork.GroupRepository.Update(dbGroup);
@@ -140,7 +140,7 @@ namespace Omack.Services.ServiceImplementations
             var result = new Result<IQueryable<GroupServiceModel>>();
             try
             {
-                var groups = _unitOfWork.GroupRepository.GetAll(x=> x.IsActive == true && x.Group_Users.All(y=>y.UserId == currentUser.Id && x.IsActive == true));
+                var groups = _unitOfWork.GroupRepository.GetAll(x=> x.IsActive == true && x.Group_Users.All(y=>y.UserId == userId && x.IsActive == true));
                 if (groups.Any())
                 {
                     var groupService = groups.Select(group => new GroupServiceModel
@@ -179,7 +179,7 @@ namespace Omack.Services.ServiceImplementations
             var result = new Result<GroupServiceModel>();
             try
             {
-                var dbGroup = _unitOfWork.GroupRepository.GetSingle(x =>x.Id == id && x.IsActive == true && x.Group_Users.All(y => y.IsActive == true && y.UserId == currentUser.Id));
+                var dbGroup = _unitOfWork.GroupRepository.GetSingle(x =>x.Id == id && x.IsActive == true && x.Group_Users.All(y => y.IsActive == true && y.UserId == userId));
                 if(dbGroup == null)
                 {
                     result.IsSuccess = false;

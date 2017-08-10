@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Omack.Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -9,7 +10,7 @@ namespace Omack.Services.Models
         public int Id { get; set; }
         public string Description { get; set; } 
         public Boolean IsActive { get; set; }
-
+        public NotificationType Type { get; set; }
         public int UserId { get; set; }
         public int GroupId { get; set; }
 

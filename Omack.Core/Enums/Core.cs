@@ -15,4 +15,9 @@ namespace Omack.Core.Enums
         UserProfile = 1,
         GroupProfile = 2
     }
+    public enum NotificationType
+    {
+        PaymentReceived = 0,
+        ItemPurchased = 1
+    }
 }

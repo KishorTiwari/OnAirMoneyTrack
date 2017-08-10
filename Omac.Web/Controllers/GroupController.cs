@@ -33,7 +33,7 @@ namespace Omack.Web.Controllers
 
         public IActionResult Index()
         {
-            var groups = _groupService.GetAll(_siteUtils.CurrentUser());
+            var groups = _groupService.GetAll(_siteUtils.CurrentUser.Id);
             
             return Ok(groups);
         }
@@ -50,7 +50,7 @@ namespace Omack.Web.Controllers
             };
 
             var groupServiceModel = _mapper.Map<GroupServiceModel>(group);
-            var result = _groupService.Add(groupServiceModel, _siteUtils.CurrentUser());
+            var result = _groupService.Add(groupServiceModel, _siteUtils.CurrentUser.Id);
             if (result.IsSuccess)
             {
                 return Ok(result.Data);
@@ -63,7 +63,7 @@ namespace Omack.Web.Controllers
         }
         public IActionResult Delete(int Id)
         {
-            var result = _groupService.Delete(Id, _siteUtils.CurrentUser());
+            var result = _groupService.Delete(Id, _siteUtils.CurrentUser.Id);
             if (result.IsSuccess)
             {
                 return Ok(result.Data);

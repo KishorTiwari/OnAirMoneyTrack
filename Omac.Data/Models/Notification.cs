@@ -16,7 +16,7 @@ namespace Omack.Data.Models
         [MaxLength(250)]
         public string Description { get; set; } // "{user name} has paid {amount}."
         public Boolean IsActive { get; set; }
-
+        public int Type { get; set; } //payment, someone purchase 
         //Foreign Keys
         [Required]
         public int UserId { get; set; }

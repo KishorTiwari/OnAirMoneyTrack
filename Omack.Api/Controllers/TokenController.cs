@@ -68,12 +68,5 @@ namespace Omack.Api.Controllers
                 return null;
             }
         }
-
-       
-        [HttpGet()]
-        public IActionResult Get()
-        {
-            return Ok("hello");
-        }
     }
 }

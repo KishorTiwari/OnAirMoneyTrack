@@ -48,14 +48,14 @@ namespace Omac.Web.Controllers
                 GroupId = 10,
                 MediaId = 1
             };
-            _itemService.Add(item,_siteUtils.CurrentUser, _siteUtils.CurrentGroup);
+            _itemService.Add(item,_siteUtils.CurrentUser.Id, _siteUtils.CurrentGroup.Id);
             return Ok(item);
         }
 
         [Authorize]
         public IActionResult Index(int? Id)
         {
-            var user = _siteUtils.CurrentUser();
+            var user = _siteUtils.CurrentUser;
             return Ok($"Your Details:{user.Name}, {user.Email}");
         }
 
@@ -86,7 +86,7 @@ namespace Omac.Web.Controllers
 
         public IActionResult GroupTestDelete(int Id)
         {
-            var result = _groupService.Delete(Id, _siteUtils.CurrentUser());
+            var result = _groupService.Delete(Id, _siteUtils.CurrentUser.Id);
             if (result.IsSuccess)
             {
                 return Ok(result.Data);
