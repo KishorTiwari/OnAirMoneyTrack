@@ -67,6 +67,12 @@ namespace Omack.Api
                 (
                    opt =>
                    {
+                       opt.Password.RequireDigit = false;
+                       opt.Password.RequiredLength = 5;
+                       opt.Password.RequireLowercase = false;
+                       opt.Password.RequireNonAlphanumeric = false;
+                       opt.Password.RequireUppercase = false;
+
                        opt.Cookies.ApplicationCookie.Events = new CookieAuthenticationEvents
                        {
                            OnRedirectToLogin = ctx =>
