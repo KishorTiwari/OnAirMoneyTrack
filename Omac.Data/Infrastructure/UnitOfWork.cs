@@ -16,6 +16,7 @@ namespace Omack.Data.Infrastructure
         private MediaRepository mediaRepository;
         private TransactionRepository transactionRepository;
         private UserRepository userRepository;
+        private NotificationRepository notificationRepository;
         public UnitOfWork(OmackContext omackContext)
         {
             _context = omackContext;
@@ -88,7 +89,17 @@ namespace Omack.Data.Infrastructure
                 return userRepository;
             }
         }
-
+        public NotificationRepository NotificationRepository
+        {
+            get
+            {
+                if(notificationRepository == null)
+                {
+                    notificationRepository = new NotificationRepository(_context);                  
+                }
+                return notificationRepository;
+            }
+        }
         public void Save()
         {
             _context.SaveChanges(); //save changes to the db.

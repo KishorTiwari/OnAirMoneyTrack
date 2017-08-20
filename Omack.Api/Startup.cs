@@ -22,6 +22,10 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Omack.Core;
 using Omack.Api.AppStart;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Net;
+using Omack.Services.Filters.ServiceImplementations;
+using Omack.Services.Filters.Services;
 
 namespace Omack.Api
 {
@@ -57,11 +61,36 @@ namespace Omack.Api
                     });
             services.AddDbContext<OmackContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("Omack-Dev")));
             services.AddDbContext<OmackLogContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("Omack-Log")));
-            services.AddIdentity<User, Role>().AddEntityFrameworkStores<OmackContext, int>();
+
+            //configure identity to return unauth status code instead of redirecting to url with no content. 
+            services.AddIdentity<User, Role>
+                (
+                   opt =>
+                   {
+                       opt.Cookies.ApplicationCookie.Events = new CookieAuthenticationEvents
+                       {
+                           OnRedirectToLogin = ctx =>
+                           {
+                               if (ctx.Request.Path.StartsWithSegments("/api") && ctx.Response.StatusCode == (int)HttpStatusCode.Unauthorized)
+                               {
+                                   ctx.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                               }
+                               else
+                               {
+                                   ctx.Response.Redirect(ctx.RedirectUri);
+                               }
+                               return Task.FromResult(0);
+                           }
+                       };
+                   }
+                ).AddEntityFrameworkStores<OmackContext, int>();
+
             services.AddScoped<UnitOfWork>();
             services.AddScoped<IGroupService, GroupService>();
+            services.AddScoped<IItemService, ItemService>();
             services.AddSingleton<SiteUtils>();
             services.AddScoped<UserService>();
+            services.AddScoped<IValidateEntityAccessService, ValidateEntityAccessService>();
             //sets the default camelcase format for returned json result to null, which will finally depened upon C# object's property names
             //.AddJsonOptions(o =>
             //{
@@ -83,6 +112,7 @@ namespace Omack.Api
             app.AddNLogWeb();
             app.UseIdentity();
             var test = Configuration["Tokens:Issuer"];
+
             app.UseJwtBearerAuthentication(new JwtBearerOptions()
             {
                 AutomaticAuthenticate = true,

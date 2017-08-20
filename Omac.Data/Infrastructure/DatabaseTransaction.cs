@@ -9,10 +9,12 @@ namespace Omack.Data.Infrastructure
     public class DatabaseTransaction : IDatabaseTransaction
     {
         private IDbContextTransaction _transaction;
+        private OmackContext _context;
 
         public DatabaseTransaction(OmackContext context)
         {
             _transaction = context.Database.BeginTransaction();
+            _context = context;
         }
         public void commit()
         {
@@ -25,7 +27,7 @@ namespace Omack.Data.Infrastructure
         }
         public void Dispose()
         {
-            _transaction.Dispose();
+            _transaction.Dispose();                     
         }
     }
 }

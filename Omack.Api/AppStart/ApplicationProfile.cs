@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Omack.Api.ViewModels;
 using Omack.Data.Models;
 using Omack.Services.Models;
 using System;
@@ -13,10 +14,16 @@ namespace Omack.Api.AppStart
         public ApplicationProfile()
         {
             CreateMap<Group, GroupServiceModel>().ReverseMap();
-            CreateMap<Item, ItemServiceModel>().ReverseMap();
+
+            CreateMap<ItemServiceModel, Item>().ReverseMap();
+            CreateMap<ItemServiceModel, ItemViewModel>().ReverseMap();
+
             CreateMap<Media, MediaServiceModel>().ReverseMap();
+
             CreateMap<User, UserServiceModel>().ReverseMap();
+
             CreateMap<Transaction, TransactionServiceModel>().ReverseMap();
+
             CreateMap<Notification, NotificationServiceModel>().ReverseMap();
         }
     }

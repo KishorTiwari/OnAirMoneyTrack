@@ -16,7 +16,7 @@ namespace Omack.Services.Models
 
         public int UserId { get; set; }
         public int GroupId { get; set; }
-        public int MediaId { get; set; }
+        public int? MediaId { get; set; }
 
         public DateTime? CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }

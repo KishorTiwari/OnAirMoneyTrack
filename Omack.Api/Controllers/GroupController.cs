@@ -28,7 +28,7 @@ namespace Omack.Api.Controllers
             _siteUtils = siteUtils;
             _context = context;
         }
-        [Authorize]
+
         [HttpGet("{id}", Name = "GetGroupById")]
         public IActionResult GetGroupById(int id)
         {
