@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Omack.Api.ViewModels
 {
-    public class LoginViewModel
+    public class TokenViewModel
     {
         [Required]
         public string Email { get; set; }

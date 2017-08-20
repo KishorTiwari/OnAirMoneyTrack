@@ -29,7 +29,7 @@ namespace Omack.Api.Controllers
         }  
         
         [HttpPost]        
-        public async Task<IActionResult> GenerateToken([FromBody] LoginViewModel model)
+        public async Task<IActionResult> GenerateToken([FromBody] TokenViewModel model)
         {
             try
             {
