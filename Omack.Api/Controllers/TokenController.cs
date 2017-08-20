@@ -24,11 +24,11 @@ namespace Omack.Api.Controllers
         public TokenController(UserManager<User> userManager, IPasswordHasher<User> hasher, IConfigurationRoot config)
         {
             _userManager = userManager;
-            _hasher = hasher;    
+            _hasher = hasher;
             _config = config;
-        }  
-        
-        [HttpPost]        
+        }
+
+        [HttpPost]
         public async Task<IActionResult> GenerateToken([FromBody] TokenViewModel model)
         {
             try
