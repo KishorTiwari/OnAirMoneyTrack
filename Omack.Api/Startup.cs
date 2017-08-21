@@ -26,6 +26,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Net;
 using Omack.Services.Filters.ServiceImplementations;
 using Omack.Services.Filters.Services;
+using Omack.Api.Filters;
 
 namespace Omack.Api
 {
@@ -97,6 +98,7 @@ namespace Omack.Api
             services.AddSingleton<SiteUtils>();
             services.AddScoped<UserService>();
             services.AddScoped<IValidateEntityAccessService, ValidateEntityAccessService>();
+            services.AddScoped<ValidateEntityAccess>();
             //sets the default camelcase format for returned json result to null, which will finally depened upon C# object's property names
             //.AddJsonOptions(o =>
             //{

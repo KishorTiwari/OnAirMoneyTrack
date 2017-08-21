@@ -41,7 +41,9 @@ namespace Omack.Services.ServiceImplementations
                 var items = _unitOfWork.ItemRepository.GetAll(x => x.IsActive && x.GroupId == groupId);
                 if (items.Any())
                 {
+                    var test = _mapper.Map<IEnumerable<ItemServiceModel>>(items);
                     var itemModels = _mapper.Map<IQueryable<ItemServiceModel>>(items);
+                   
                     result.IsSuccess = true;
                     result.Data = itemModels;
                     return result;

@@ -6,6 +6,6 @@ namespace Omack.Services.Filters.ServiceImplementations
 {
     public interface IValidateEntityAccessService
     {
-        bool Validate(int id, string entity);
+        bool Validate(int currentUserId, int entityId, string parameterName);
     }
 }
