@@ -10,7 +10,7 @@ namespace Omack.Services.Services
 {
     public interface IItemService
     {
-        Result<IQueryable<ItemServiceModel>> GetAll(int userId, int groupId);
+        Result<IList<ItemServiceModel>> GetAll(int userId, int groupId);
         Result<ItemServiceModel> GetById(int id, int userId, int groupId);
         Result<ItemServiceModel> Add(ItemServiceModel item, int userId, int groupId);
         Result<ItemServiceModel> Update(ItemServiceModel item, int userId, int groupId);

@@ -135,9 +135,9 @@ namespace Omack.Services.ServiceImplementations
             }
         }
 
-        public Result<IQueryable<GroupServiceModel>> GetAll(int userId)
+        public Result<IList<GroupServiceModel>> GetAll(int userId)
         {
-            var result = new Result<IQueryable<GroupServiceModel>>();
+            var result = new Result<IList<GroupServiceModel>>();
             try
             {
                 var groups = _unitOfWork.GroupRepository.GetAll(x=> x.IsActive == true && x.Group_Users.All(y=>y.UserId == userId && x.IsActive == true));
@@ -153,7 +153,8 @@ namespace Omack.Services.ServiceImplementations
                         CreatedBy = group.CreatedBy,
                         UpdatedOn = group.UpdatedOn,
                         UpdatedBy = group.UpdatedBy
-                    });
+                    }).ToList();
+
                     result.IsSuccess = true;
                     result.Data = groupService;
                     return result;

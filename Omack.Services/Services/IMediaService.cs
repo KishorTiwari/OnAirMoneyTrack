@@ -9,7 +9,7 @@ namespace Omack.Services.Services
 {
     public interface IMediaService
     {
-        Result<IQueryable<MediaServiceModel>> GetAll(int userId, int groupId);
+        Result<IList<MediaServiceModel>> GetAll(int userId, int groupId);
         Result<MediaServiceModel> GetById(int id, int userId, int groupId);
         Result<MediaServiceModel> Add(MediaServiceModel item, int userId, int groupId);
         Result<MediaServiceModel> Update(MediaServiceModel item, int userId, int groupId);

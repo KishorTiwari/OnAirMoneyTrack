@@ -94,15 +94,15 @@ namespace Omack.Services.ServiceImplementations
             }
         }
 
-        public Result<IQueryable<TransactionServiceModel>> GetAll(CurrentUser currentUser, CurrentGroup currentGroup)
+        public Result<IList<TransactionServiceModel>> GetAll(CurrentUser currentUser, CurrentGroup currentGroup)
         {
-            var result = new Result<IQueryable<TransactionServiceModel>>();
+            var result = new Result<IList<TransactionServiceModel>>();
             try
             {
                 var transactionEntities = _unitOfWork.TransactionRepository.GetAll(x => x.IsActive && x.UserId == currentUser.Id && x.GroupId == currentGroup.Id);
                 if (transactionEntities.Any())
                 {
-                    var transactionServiceModels = _mapper.Map<IQueryable<TransactionServiceModel>>(transactionEntities);
+                    var transactionServiceModels = _mapper.Map<IList<TransactionServiceModel>>(transactionEntities);
 
                     result.IsSuccess = true;
                     result.Data = transactionServiceModels;

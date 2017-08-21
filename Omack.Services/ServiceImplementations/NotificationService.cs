@@ -92,15 +92,15 @@ namespace Omack.Services.ServiceImplementations
             }
         }
 
-        public Result<IQueryable<NotificationServiceModel>> GetAll(int userId, int groupId)
+        public Result<IList<NotificationServiceModel>> GetAll(int userId, int groupId)
         {
-            var result = new Result<IQueryable<NotificationServiceModel>>();
+            var result = new Result<IList<NotificationServiceModel>>();
             try
             {
                 var notificationEntities = _unitOfWork.NotificationRepository.GetAll(x => x.UserId == userId && x.IsActive && x.GroupId == groupId);
                 if (notificationEntities.Any())
                 {
-                    var notificationServiceModels = _mapper.Map<IQueryable<NotificationServiceModel>>(notificationEntities);
+                    var notificationServiceModels = _mapper.Map<IList<NotificationServiceModel>>(notificationEntities);
 
                     result.IsSuccess = true;
                     result.Data = notificationServiceModels;

@@ -29,15 +29,15 @@ namespace Omack.Services.ServiceImplementations
         }
 
         //Functions
-        public Result<IQueryable<MediaServiceModel>> GetAll(int userId, int groupId)
+        public Result<IList<MediaServiceModel>> GetAll(int userId, int groupId)
         {
-            var result = new Result<IQueryable<MediaServiceModel>>();
+            var result = new Result<IList<MediaServiceModel>>();
             try
             {
                 var mediaEntities = _unitOfWork.MediaRepository.GetAll(x => x.User.Id == userId);
                 if (mediaEntities.Any())
                 {
-                    var mediaServiceModels = _mapper.Map<IQueryable<MediaServiceModel>>(mediaEntities);
+                    var mediaServiceModels = _mapper.Map<IList<MediaServiceModel>>(mediaEntities);
 
                     result.IsSuccess = true;
                     result.Data = mediaServiceModels;

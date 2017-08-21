@@ -32,18 +32,16 @@ namespace Omack.Services.ServiceImplementations
         }
 
         //Functions
-        public Result<IQueryable<ItemServiceModel>> GetAll(int userId, int groupId)
+        public Result<IList<ItemServiceModel>> GetAll(int userId, int groupId)
         {
-            var result = new Result<IQueryable<ItemServiceModel>>();
+            var result = new Result<IList<ItemServiceModel>>();
 
             try
             {
                 var items = _unitOfWork.ItemRepository.GetAll(x => x.IsActive && x.GroupId == groupId);
                 if (items.Any())
                 {
-                    var test = _mapper.Map<IEnumerable<ItemServiceModel>>(items);
-                    var itemModels = _mapper.Map<IQueryable<ItemServiceModel>>(items);
-                   
+                    var itemModels = _mapper.Map<IList<ItemServiceModel>>(items);                  
                     result.IsSuccess = true;
                     result.Data = itemModels;
                     return result;

@@ -9,7 +9,7 @@ namespace Omack.Services.Services
 {
     public interface INotificationService
     {
-        Result<IQueryable<NotificationServiceModel>> GetAll(int userId, int groupId);
+        Result<IList<NotificationServiceModel>> GetAll(int userId, int groupId);
         Result<NotificationServiceModel> GetById(int id, int userId, int groupId);
         Result<NotificationServiceModel> Add(NotificationServiceModel notificationModel, int userId, int groupId);
         Result<NotificationServiceModel> Update(NotificationServiceModel notificationModel, int userId, int groupId);

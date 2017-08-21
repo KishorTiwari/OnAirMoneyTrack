@@ -9,7 +9,7 @@ namespace Omack.Services.Services
 {
     public interface ITransactionService
     {
-        Result<IQueryable<TransactionServiceModel>> GetAll(CurrentUser currentUser, CurrentGroup currentGroup);
+        Result<IList<TransactionServiceModel>> GetAll(CurrentUser currentUser, CurrentGroup currentGroup);
         Result<TransactionServiceModel> GetById(int id, CurrentUser currrentUser, CurrentGroup currentGroup);
         Result<TransactionServiceModel> Add(TransactionServiceModel group, CurrentUser currentUser, CurrentGroup currentGroup);
         Result<TransactionServiceModel> Update(TransactionServiceModel group, CurrentUser currentUser, CurrentGroup currentGroup);

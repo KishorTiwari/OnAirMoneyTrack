@@ -42,9 +42,9 @@ namespace Omack.Services.ServiceImplementations
             //}
             return true;
         }
-        public IQueryable<User> GetUsersByGroupId(int groupId)
+        public IList<User> GetUsersByGroupId(int groupId)
         {
-            var users = _unitOfWork.UserRepository.GetAll(x => x.Group_Users.All(y => y.GroupId == groupId));
+            var users = _unitOfWork.UserRepository.GetAll(x => x.Group_Users.All(y => y.GroupId == groupId)).ToList();
             return users;
         }
         public Result<UserServiceModel> GetUserById(int id, CurrentUser currentUser)

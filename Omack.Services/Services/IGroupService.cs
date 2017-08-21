@@ -11,7 +11,7 @@ namespace Omack.Services.Services
 {
     public interface IGroupService
     {
-        Result<IQueryable<GroupServiceModel>> GetAll(int userId);
+        Result<IList<GroupServiceModel>> GetAll(int userId);
         Result<GroupServiceModel> GetById(int id, int userId);
         Result<GroupServiceModel> Add(GroupServiceModel group, int userId);
         Result<GroupServiceModel> Update(GroupServiceModel group, int userId);
