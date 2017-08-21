@@ -36,21 +36,20 @@ namespace Omack.Api.Controllers
             _mapper = mapper;
         }
 
-
         /*
         ROUTING - same for other enitities
         api/group/23/item/23 --get item of id 23 from group id 23
         api/group/24/items --get all items from group id 24
         */
 
-        [HttpGet()]
+        [HttpGet(Name = "GetItemsByGroupId")]
         [ValidateModel]
         public ActionResult GetItemsByGroupId(int groupId)
         {
             var result = _itemService.GetAll(_currentUserId, groupId);
             if (result.IsSuccess)
             {
-                var itemModels = _mapper.Map<IQueryable<ItemViewModel>>(result.Data);
+                var itemModels = _mapper.Map<IList<ItemViewModel>>(result.Data);
                 return Ok(itemModels);
             }
             return NotFound(result.ErrorMessage);
