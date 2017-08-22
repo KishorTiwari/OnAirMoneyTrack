@@ -13,6 +13,7 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using AutoMapper;
 using Omack.Core.Constants;
+using Omack.Core.Enums;
 
 namespace Omack.Services.ServiceImplementations
 {
@@ -38,7 +39,7 @@ namespace Omack.Services.ServiceImplementations
 
             try
             {
-                var items = _unitOfWork.ItemRepository.GetAll(x => x.IsActive && x.GroupId == groupId);
+                var items = _unitOfWork.ItemRepository.GetAll(x => x.IsActive && x.GroupId == groupId && x.UserId == userId);
                 if (items.Any())
                 {
                     var itemModels = _mapper.Map<IList<ItemServiceModel>>(items);                  
@@ -72,7 +73,6 @@ namespace Omack.Services.ServiceImplementations
                 if (item != null)
                 {
                     var itemModel = _mapper.Map<ItemServiceModel>(item);
-
                     result.IsSuccess = true;
                     result.Data = itemModel;
                     return result;

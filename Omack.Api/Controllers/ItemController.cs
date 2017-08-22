@@ -17,7 +17,7 @@ using Omack.Services.Filters.ServiceImplementations;
 
 namespace Omack.Api.Controllers
 {
-    [Route("api/group/{groupId:int}/item")]
+    [Route("api/group/{groupId:int:min(1)}/item")]
     [Authorize]
     public class ItemController : Controller
     {
@@ -49,39 +49,38 @@ namespace Omack.Api.Controllers
             var result = _itemService.GetAll(_currentUserId, groupId);
             if (result.IsSuccess)
             {
-                var itemModels = _mapper.Map<IList<ItemViewModel>>(result.Data);
-                return Ok(itemModels);
+                var itemViewModels = _mapper.Map<IList<ItemViewModel>>(result.Data);
+                return Ok(itemViewModels);
             }
             return NotFound(result.ErrorMessage);
         }
 
-        [HttpGet("{itemId:int}", Name = "GetItemById")]
+        [HttpGet("{itemId:int:min(1)}", Name = "GetItemById")]
         public ActionResult GetItemById(int groupId, int itemId)
         {
             var result = _itemService.GetById(itemId, _currentUserId, groupId);
             if (result.IsSuccess)
             {
-                var items = _mapper.Map<ItemViewModel>(result.Data);
-                return Ok(items);
+                var itemViewModel = _mapper.Map<ItemViewModel>(result.Data);
+                return Ok(itemViewModel);
             }
             else
             {
-                return BadRequest(result.ErrorMessage);
+                return NotFound(result.ErrorMessage);
             }
         }
 
         [HttpPost(Name = "CreateItemByGroupId")]
         [ValidateModel]
-        [ServiceFilter(typeof(ValidateEntityAccess))]
-        public IActionResult CreateItem([FromBody]ItemViewModel itemModel, int groupId)
+        [ServiceFilter(typeof(ValidateEntityAccess))] //put groupId as first parameter, as filter will take it as entity name to be validated. 
+        public IActionResult CreateItem(int groupId, [FromBody]ItemViewModel itemModel)
         {
             var itemServiceModel = _mapper.Map<ItemServiceModel>(itemModel);
             var result = _itemService.Add(itemServiceModel, _currentUserId, groupId);
             if (result.IsSuccess)
             {
-                // return Ok(result.Data); returns 200 Ok. 
-                var item = result.Data;
-                return CreatedAtAction("GetItemById", new { itemId = item.Id }, item);
+                var itemViewModel = _mapper.Map<ItemViewModel>(result.Data);
+                return CreatedAtAction("GetItemById", new { itemId = itemViewModel.Id }, itemViewModel); //return 201 Created with http location header
             }
             else
             {
@@ -89,6 +88,18 @@ namespace Omack.Api.Controllers
             }
         }
 
+        [HttpDelete("{itemId:int:min(1)}",Name = "DeleteItemById")]
+        [ValidateModel]
+        public IActionResult DeleteItemById(int groupId, int itemId)
+        {
+            var result = _itemService.Delete(itemId, _currentUserId, groupId);
+            if (result.IsSuccess)
+            {
+                var itemModel = _mapper.Map<ItemViewModel>(result.Data);
+                return Ok(itemModel);
+            }
+            return BadRequest(result.ErrorMessage);
+        }
         
     }
 }

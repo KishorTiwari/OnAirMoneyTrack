@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Omack.Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -20,8 +23,7 @@ namespace Omack.Api.ViewModels
         public DateTime DateOfPurchase { get; set; }
 
         [Required]
-        public int ItemType { get; set; }
-
-        public Boolean IsActive { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))] //serialize into enum string instead of value when making get request.
+        public ItemType ItemType { get; set; }
     }
 }
