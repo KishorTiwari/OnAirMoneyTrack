@@ -55,9 +55,8 @@ namespace Omack.Api.Controllers
             return NotFound(result.ErrorMessage);
         }
 
-        //Get item by Group Id and Item Id
         [HttpGet("{itemId:int}", Name = "GetItemById")]
-        public ActionResult GetItemByIdItemId(int groupId, int itemId)
+        public ActionResult GetItemById(int groupId, int itemId)
         {
             var result = _itemService.GetById(itemId, _currentUserId, groupId);
             if (result.IsSuccess)
@@ -71,21 +70,25 @@ namespace Omack.Api.Controllers
             }
         }
 
-        [HttpPost(Name = "PostItemByGroupId")]
+        [HttpPost(Name = "CreateItemByGroupId")]
         [ValidateModel]
         [ServiceFilter(typeof(ValidateEntityAccess))]
-        public IActionResult PostItem([FromBody]ItemViewModel itemModel, int groupId)
+        public IActionResult CreateItem([FromBody]ItemViewModel itemModel, int groupId)
         {
             var itemServiceModel = _mapper.Map<ItemServiceModel>(itemModel);
             var result = _itemService.Add(itemServiceModel, _currentUserId, groupId);
             if (result.IsSuccess)
             {
-                return Ok(result.Data);
+                // return Ok(result.Data); returns 200 Ok. 
+                var item = result.Data;
+                return CreatedAtAction("GetItemById", new { itemId = item.Id }, item);
             }
             else
             {
                 return BadRequest(result.ErrorMessage);
             }
         }
+
+        
     }
 }
