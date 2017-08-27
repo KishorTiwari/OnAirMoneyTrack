@@ -14,6 +14,8 @@ using Omack.Services.Models;
 using Omack.Api.Filters;
 using Omack.Data.Models;
 using Omack.Services.Filters.ServiceImplementations;
+using Microsoft.AspNetCore.JsonPatch;
+using System.ComponentModel.DataAnnotations;
 
 namespace Omack.Api.Controllers
 {
@@ -52,7 +54,10 @@ namespace Omack.Api.Controllers
                 var itemViewModels = _mapper.Map<IList<ItemViewModel>>(result.Data);
                 return Ok(itemViewModels);
             }
-            return NotFound(result.ErrorMessage);
+            else
+            {
+                return new StatusCodeResult(result.StatusCodes);
+            }
         }
 
         [HttpGet("{itemId:int:min(1)}", Name = "GetItemById")]
@@ -66,7 +71,7 @@ namespace Omack.Api.Controllers
             }
             else
             {
-                return NotFound(result.ErrorMessage);
+                return new StatusCodeResult(result.StatusCodes);
             }
         }
 
@@ -84,12 +89,13 @@ namespace Omack.Api.Controllers
             }
             else
             {
-                return BadRequest(result.ErrorMessage);
+                return new StatusCodeResult(result.StatusCodes);
             }
         }
 
-        [HttpDelete("{itemId:int:min(1)}",Name = "DeleteItemById")]
+        [HttpDelete("{itemId:int:min(1)}", Name = "DeleteItemById")]
         [ValidateModel]
+        [ServiceFilter(typeof(ValidateEntityAccess))]
         public IActionResult DeleteItemById(int groupId, int itemId)
         {
             var result = _itemService.Delete(itemId, _currentUserId, groupId);
@@ -98,8 +104,37 @@ namespace Omack.Api.Controllers
                 var itemModel = _mapper.Map<ItemViewModel>(result.Data);
                 return Ok(itemModel);
             }
-            return BadRequest(result.ErrorMessage);
+            else
+            {
+                return new StatusCodeResult(result.StatusCodes);
+            }          
         }
-        
+
+        [HttpPatch("{itemId:int:Min(1)}", Name = "ItemPatchUpdate")]
+        [ValidateModel]
+        public IActionResult ItemPatchUpdate(int groupId, int itemId, [FromBody] JsonPatchDocument<ItemViewModel> itemPatch)
+        {
+            var itemSM = _itemService.GetById(itemId, _currentUserId, groupId).Data;
+            var itemVMCopy = _mapper.Map<ItemViewModel>(itemSM);
+            itemPatch.ApplyTo(itemVMCopy, ModelState);
+            if (ModelState.IsValid)
+            {
+                var itemServicePatch = _mapper.Map<JsonPatchDocument<ItemServiceModel>>(itemPatch);
+                var result = _itemService.PatchUpdate(groupId, _currentUserId, itemId, itemServicePatch);
+                if (result.IsSuccess)
+                {
+                    var itemVM = _mapper.Map<ItemViewModel>(result.Data);
+                    return CreatedAtAction("GetItemById", new { itemId = itemVM.Id }, itemVM);
+                }
+                else
+                {
+                    return new StatusCodeResult(result.StatusCodes);
+                }
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
     }
 }

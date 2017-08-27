@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.JsonPatch.Operations;
 using Omack.Api.ViewModels;
 using Omack.Data.Models;
 using Omack.Services.Models;
@@ -25,6 +27,9 @@ namespace Omack.Api.AppStart
             CreateMap<Transaction, TransactionServiceModel>().ReverseMap();
 
             CreateMap<Notification, NotificationServiceModel>().ReverseMap();
+
+            CreateMap(typeof(JsonPatchDocument<>), typeof(JsonPatchDocument<>));
+            CreateMap(typeof(Operation<>), typeof(Operation<>));
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,6 +9,7 @@ namespace Omack.Core.Models
     {
         public bool IsSuccess { get; set; }
         public string ErrorMessage { get; set; }
+        public int StatusCodes { get; set; }
         public T Data { get; set; }
     }
 }

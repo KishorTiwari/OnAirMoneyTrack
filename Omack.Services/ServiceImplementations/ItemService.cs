@@ -14,6 +14,8 @@ using Microsoft.Extensions.Logging;
 using AutoMapper;
 using Omack.Core.Constants;
 using Omack.Core.Enums;
+using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Http;
 
 namespace Omack.Services.ServiceImplementations
 {
@@ -51,6 +53,7 @@ namespace Omack.Services.ServiceImplementations
                 {
                     result.IsSuccess = false;
                     result.ErrorMessage = ErrorMessage.GetUnAuth;
+                    result.StatusCodes = StatusCodes.Status404NotFound;
                     return result;
                 }
             }
@@ -59,6 +62,7 @@ namespace Omack.Services.ServiceImplementations
                 _logger.LogCritical(ex.InnerException.Message);
                 result.IsSuccess = false;
                 result.ErrorMessage = ErrorMessage.Get;
+                result.StatusCodes = StatusCodes.Status500InternalServerError;
                 return result;
             }
         }
@@ -81,6 +85,7 @@ namespace Omack.Services.ServiceImplementations
                 {
                     result.IsSuccess = false;
                     result.ErrorMessage = ErrorMessage.GetUnAuth;
+                    result.StatusCodes = StatusCodes.Status401Unauthorized;
                     return result;
                 }
             }
@@ -89,6 +94,7 @@ namespace Omack.Services.ServiceImplementations
                 _logger.LogCritical(ex.InnerException.Message);
                 result.IsSuccess = false;
                 result.ErrorMessage = ErrorMessage.Get;
+                result.StatusCodes = StatusCodes.Status500InternalServerError;
                 return result;
             }
         }
@@ -125,6 +131,7 @@ namespace Omack.Services.ServiceImplementations
                 _logger.LogCritical(ex.InnerException.Message);
                 result.IsSuccess = false;
                 result.ErrorMessage = ErrorMessage.Add;
+                result.StatusCodes = StatusCodes.Status500InternalServerError;
                 return result;
             }
         }
@@ -173,6 +180,43 @@ namespace Omack.Services.ServiceImplementations
             }
         }
 
+        public Result<ItemServiceModel> PatchUpdate(int groupId, int userId, int itemId, JsonPatchDocument<ItemServiceModel> itemServicePatch)
+        {
+            var result = new Result<ItemServiceModel>();
+            try
+            {
+                var itemEntity = _unitOfWork.ItemRepository.GetSingle(x => x.Id == itemId && x.IsActive && x.UserId == userId && x.GroupId == groupId);
+                if(itemEntity != null)
+                {
+                    var itemEntityPatch = _mapper.Map<JsonPatchDocument<Item>>(itemServicePatch);
+                    itemEntityPatch.ApplyTo(itemEntity);
+                    _unitOfWork.Save();
+
+                    var itemUpdated = _mapper.Map<ItemServiceModel>(itemEntity);
+
+                    result.IsSuccess = true;
+                    result.Data = itemUpdated;
+                    result.StatusCodes = StatusCodes.Status200OK;
+                    return result;
+                }
+                else
+                {
+                    result.IsSuccess = false;
+                    result.ErrorMessage = ErrorMessage.UpdateUnAuth;
+                    result.StatusCodes = StatusCodes.Status401Unauthorized;
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex.InnerException.Message);
+                result.IsSuccess = false;
+                result.ErrorMessage = ErrorMessage.Update;
+                result.StatusCodes = StatusCodes.Status500InternalServerError;
+                return result;
+            }
+        }
+
         public Result<ItemServiceModel> Delete(int id, int userId, int groupId)
         {
             var result = new Result<ItemServiceModel>();
@@ -196,6 +240,7 @@ namespace Omack.Services.ServiceImplementations
                 {
                     result.IsSuccess = false;
                     result.ErrorMessage = ErrorMessage.DeleteUnAuth;
+                    result.StatusCodes = StatusCodes.Status401Unauthorized;
                     return result;
                 }
             }
@@ -204,6 +249,7 @@ namespace Omack.Services.ServiceImplementations
                 _logger.LogCritical(ex.InnerException.Message);
                 result.IsSuccess = false;
                 result.ErrorMessage = ErrorMessage.Delete;
+                result.StatusCodes = StatusCodes.Status500InternalServerError;
                 return result;
             }
         }

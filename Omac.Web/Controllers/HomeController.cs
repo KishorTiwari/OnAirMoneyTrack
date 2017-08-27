@@ -55,8 +55,7 @@ namespace Omac.Web.Controllers
         [Authorize]
         public IActionResult Index(int? Id)
         {
-            var user = _siteUtils.CurrentUser;
-            return Ok($"Your Details:{user.Name}, {user.Email}");
+            return View();
         }
 
         public IActionResult About()
