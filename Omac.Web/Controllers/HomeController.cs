@@ -52,7 +52,6 @@ namespace Omac.Web.Controllers
             return Ok(item);
         }
 
-        [Authorize]
         public IActionResult Index(int? Id)
         {
             return View();

@@ -6,19 +6,11 @@ using System.Threading.Tasks;
 
 namespace Omack.Api.ViewModels
 {
-    public class UserViewModel
+    public class TokenVM
     {
-        [Display(Name = "Name")]
-        public string UserName { get; set; }
-
         [Required]
-        [Display(Name = "Email")]
-        [EmailAddress]
         public string Email { get; set; }
-
         [Required]
-        [Display(Name = "Password")]
         public string Password { get; set; }
-
     }
 }

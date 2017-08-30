@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
+    <TypeScriptToolsVersion>2.3</TypeScriptToolsVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -13,6 +14,15 @@
     <Content Remove="wwwroot\node_modules\**" />
     <EmbeddedResource Remove="wwwroot\node_modules\**" />
     <None Remove="wwwroot\node_modules\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="wwwroot\app\Home\home.component.ts" />
+    <Content Include="wwwroot\app\Item\item.component.ts" />
+    <Content Include="wwwroot\app\Login\LoginComponent.ts" />
+    <Content Include="wwwroot\app\Models\Item.ts" />
+    <Content Include="wwwroot\app\Services\AuthService.ts" />
+    <Content Include="wwwroot\app\Services\ItemService.ts" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.1.1" />
@@ -42,6 +52,7 @@
   <ItemGroup>
     <Folder Include="Views\Group\" />
     <Folder Include="Views\Group\" />
+    <Folder Include="Views\Partial\" />
   </ItemGroup>
 
 </Project>

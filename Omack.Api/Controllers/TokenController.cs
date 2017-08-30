@@ -11,6 +11,7 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Cors;
 
 namespace Omack.Api.Controllers
 {
@@ -29,7 +30,7 @@ namespace Omack.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> GenerateToken([FromBody] TokenViewModel model)
+        public async Task<IActionResult> GenerateToken([FromBody] TokenVM model)
         {
             try
             {
@@ -56,8 +57,8 @@ namespace Omack.Api.Controllers
                         return Ok(
                             new
                             {
-                                token = new JwtSecurityTokenHandler().WriteToken(token),
-                                expiration = token.ValidTo
+                                access_token = new JwtSecurityTokenHandler().WriteToken(token),
+                                expires_on = token.ValidTo
                             });
                     }
                 }

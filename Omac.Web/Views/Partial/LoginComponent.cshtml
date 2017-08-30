@@ -1,0 +1,33 @@
+<form>
+    <div class="form-group">
+        @*<input class="form-control" type="text" name="email" [value]="email" (input)="email=$event.target.value" />*@
+        @*OR*@
+        <input class="form-control" type="text" name="email" [(ngModel)]="user.email" />
+    </div>
+    <div class="form-group">
+        <input class="form-control" type="text" name="password" [(ngModel)]="user.password" />
+    </div>
+    <div class="form-group">
+        <input class="btn btn-primary" (click)="login()" type="button" name="email" value="Submit" />
+        <p *ngIf="showDetails">we can also user on-click instead of (click) - canonical form</p>
+        <p>You entered: {{user.email}}</p>
+    </div>
+
+
+    @*<div class="form-group">
+                <input [ngClass]="applyAllClass()" type="submit" name="email" value="Submit" />
+        </div>
+        <div class="form-group">
+            <input style="color:red" [style.font-weight]="isBold? 'bold': 'normal'" type="submit" name="email" value="Submit" />
+        </div>
+        <div class="form-group">
+            <input style="color:red" [style.font-size]="fontSizePx" type="submit" name="email" value="Submit" />
+        </div>
+        <div class="form-group">
+            <input style="color:red" [style.font-size.px]="fontSize" type="submit" name="email" value="Submit" />
+        </div>
+        <div class="form-group">
+            <input style="color:red" [ngStyle]="addStyles()" type="submit" name="email" value="Submit" />
+        </div>*@
+</form>
+<button (click)="toggleDetails()">{{showDetails? 'Hide Details': 'Show Details'}}</button>

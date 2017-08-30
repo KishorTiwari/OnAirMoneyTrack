@@ -48,6 +48,7 @@ namespace Omack.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
             var autoConfig = new AutoMapper.MapperConfiguration(config =>
             {
                 config.AddProfile(new ApplicationProfile());
@@ -114,7 +115,12 @@ namespace Omack.Api
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             //loggerFactory.AddConsole();
-            //loggerFactory.AddDebug(); //by default: Information level or more serious. to log critical error .AddDebug(LogLevel.Critical).            
+            //loggerFactory.AddDebug(); //by default: Information level or more serious. to log critical error .AddDebug(LogLevel.Critical).   
+            app.UseCors(opt => {
+                opt.AllowAnyOrigin();
+                opt.AllowAnyMethod();
+                opt.AllowAnyHeader();
+            });
             loggerFactory.AddNLog(); //buildin extension for Nlog
             LogManager.Configuration.Variables["Omack-Log"] = Configuration.GetConnectionString("Omack-Log");
             app.AddNLogWeb();

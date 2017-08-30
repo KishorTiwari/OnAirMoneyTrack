@@ -24,17 +24,15 @@ namespace Omack.Api.Controllers
     public class ItemController : Controller
     {
         private IMapper _mapper;
-        private ILogger<ItemController> _logger;
         private IItemService _itemService;
         private int _currentUserId;
         private IValidateEntityAccessService _validateEntityAccessService;
 
-        public ItemController(IItemService itemService, SiteUtils siteUtils, ILogger<ItemController> logger, IMapper mapper, IValidateEntityAccessService validateEntityAccessService)
+        public ItemController(IItemService itemService, SiteUtils siteUtils, IMapper mapper, IValidateEntityAccessService validateEntityAccessService)
         {
             _itemService = itemService;
             _currentUserId = siteUtils.CurrentUser.Id;
             _validateEntityAccessService = validateEntityAccessService;
-            _logger = logger;
             _mapper = mapper;
         }
 
@@ -51,7 +49,7 @@ namespace Omack.Api.Controllers
             var result = _itemService.GetAll(_currentUserId, groupId);
             if (result.IsSuccess)
             {
-                var itemViewModels = _mapper.Map<IList<ItemViewModel>>(result.Data);
+                var itemViewModels = _mapper.Map<IList<ItemVM>>(result.Data);
                 return Ok(itemViewModels);
             }
             else
@@ -66,7 +64,7 @@ namespace Omack.Api.Controllers
             var result = _itemService.GetById(itemId, _currentUserId, groupId);
             if (result.IsSuccess)
             {
-                var itemViewModel = _mapper.Map<ItemViewModel>(result.Data);
+                var itemViewModel = _mapper.Map<ItemVM>(result.Data);
                 return Ok(itemViewModel);
             }
             else
@@ -78,13 +76,13 @@ namespace Omack.Api.Controllers
         [HttpPost(Name = "CreateItemByGroupId")]
         [ValidateModel]
         [ServiceFilter(typeof(ValidateEntityAccess))] //put groupId as first parameter, as filter will take it as entity name to be validated. 
-        public IActionResult CreateItem(int groupId, [FromBody]ItemViewModel itemModel)
+        public IActionResult CreateItem(int groupId, [FromBody]ItemVM itemModel)
         {
             var itemServiceModel = _mapper.Map<ItemServiceModel>(itemModel);
             var result = _itemService.Add(itemServiceModel, _currentUserId, groupId);
             if (result.IsSuccess)
             {
-                var itemViewModel = _mapper.Map<ItemViewModel>(result.Data);
+                var itemViewModel = _mapper.Map<ItemVM>(result.Data);
                 return CreatedAtAction("GetItemById", new { itemId = itemViewModel.Id }, itemViewModel); //return 201 Created with http location header
             }
             else
@@ -101,7 +99,7 @@ namespace Omack.Api.Controllers
             var result = _itemService.Delete(itemId, _currentUserId, groupId);
             if (result.IsSuccess)
             {
-                var itemModel = _mapper.Map<ItemViewModel>(result.Data);
+                var itemModel = _mapper.Map<ItemVM>(result.Data);
                 return Ok(itemModel);
             }
             else
@@ -112,10 +110,10 @@ namespace Omack.Api.Controllers
 
         [HttpPatch("{itemId:int:Min(1)}", Name = "ItemPatchUpdate")]
         [ValidateModel]
-        public IActionResult ItemPatchUpdate(int groupId, int itemId, [FromBody] JsonPatchDocument<ItemViewModel> itemPatch)
+        public IActionResult ItemPatchUpdate(int groupId, int itemId, [FromBody] JsonPatchDocument<ItemVM> itemPatch)
         {
             var itemSM = _itemService.GetById(itemId, _currentUserId, groupId).Data;
-            var itemVMCopy = _mapper.Map<ItemViewModel>(itemSM);
+            var itemVMCopy = _mapper.Map<ItemVM>(itemSM);
             itemPatch.ApplyTo(itemVMCopy, ModelState);
             if (ModelState.IsValid)
             {
@@ -123,7 +121,7 @@ namespace Omack.Api.Controllers
                 var result = _itemService.PatchUpdate(groupId, _currentUserId, itemId, itemServicePatch);
                 if (result.IsSuccess)
                 {
-                    var itemVM = _mapper.Map<ItemViewModel>(result.Data);
+                    var itemVM = _mapper.Map<ItemVM>(result.Data);
                     return CreatedAtAction("GetItemById", new { itemId = itemVM.Id }, itemVM);
                 }
                 else

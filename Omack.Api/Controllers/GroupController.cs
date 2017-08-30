@@ -11,6 +11,8 @@ using Omack.Services.Services;
 using Omack.Core;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
+using AutoMapper;
+using Omack.Api.ViewModels;
 
 namespace Omack.Api.Controllers
 {
@@ -19,40 +21,40 @@ namespace Omack.Api.Controllers
     public class GroupController : Controller
     {
         private IGroupService _groupService;
-        private SiteUtils _siteUtils;
+        private int _currentUserId;
         private IHttpContextAccessor _context;
+        private IMapper _mapper;
 
-        public GroupController(IGroupService groupService, SiteUtils siteUtils, IHttpContextAccessor context)
+        public GroupController(IGroupService groupService, SiteUtils siteUtils, IHttpContextAccessor context, IMapper mapper)
         {
             _groupService = groupService;
-            _siteUtils = siteUtils;
+            _currentUserId = siteUtils.CurrentUser.Id;
             _context = context;
+            _mapper = mapper;
         }
 
-        [HttpGet("{id}", Name = "GetGroupById")]
+        [HttpGet("{id:int:Min(1)}", Name = "GetGroupById")]
         public IActionResult GetGroupById(int id)
         {
-            var result = _groupService.GetById(id, _siteUtils.CurrentUser.Id);
+            var result = _groupService.GetById(id, _currentUserId);
             if (result.IsSuccess)
             {
                 var group = result.Data;
                 return Ok(group);
             }
-            return BadRequest(result.ErrorMessage);
-        }
-
+            return new StatusCodeResult(result.StatusCodes);
+        }    
+        
         [HttpGet()]
-        public IActionResult GetGroups()
+        public IActionResult GetGroupsByUserID()
         {
-            var result = _groupService.GetAll(_siteUtils.CurrentUser.Id);
+            var result = _groupService.GetAll(_currentUserId);
             if (result.IsSuccess)
             {
-                return Ok(result.Data);
+                var groupsVM = _mapper.Map<ItemVM>(result.Data);
+                return Ok(groupsVM);
             }
-            else
-            {
-                return Ok(result.ErrorMessage);
-            }
+            return new StatusCodeResult(result.StatusCodes);
         }
     }
 }

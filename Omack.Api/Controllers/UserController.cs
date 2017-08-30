@@ -29,7 +29,7 @@ namespace Omack.Api.Controllers
 
         [HttpPost]
         [ValidateModel]
-        public async Task<IActionResult> UserSignUp([FromBody]UserViewModel userModel)
+        public async Task<IActionResult> UserSignUp([FromBody]UserVM userModel)
         {
             if (await _userManager.FindByEmailAsync(userModel.Email) == null)
             {
@@ -42,7 +42,7 @@ namespace Omack.Api.Controllers
                 var client = new HttpClient();
                 var baseURL = new Uri($"{_httpContextAccessor.HttpContext.Request.Scheme}://{_httpContextAccessor.HttpContext.Request.Host.ToUriComponent()}");
                 client.BaseAddress = baseURL;
-                var tokenModel = new TokenViewModel
+                var tokenModel = new TokenVM
                 {
                     Email = userModel.Email,
                     Password = userModel.Password

@@ -34,8 +34,7 @@ namespace Omack.Web.Controllers
         public IActionResult Index()
         {
             var groups = _groupService.GetAll(_siteUtils.CurrentUser.Id);
-            
-            return Ok(groups);
+            return View();
         }
 
         public IActionResult Select()

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Omack.Api.ViewModels
 {
-    public class ItemViewModel
+    public class ItemVM
     {
         public int Id { get; set; }
 
