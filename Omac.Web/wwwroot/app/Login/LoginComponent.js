@@ -18,7 +18,7 @@ var LoginComponent = (function () {
         this._http = _http;
         //public user = new User();
         this.user = {
-            email: 'kishorsanu1994@gmail.comm',
+            email: 'kishorsanu1994@gmail.com',
             password: 'samsung44'
         };
         this.showDetails = false;
@@ -27,16 +27,15 @@ var LoginComponent = (function () {
     LoginComponent.prototype.login = function () {
         var _this = this;
         var body = 'email=' + this.user.email + '&password=' + this.user.password;
-        console.log(this.user.email + ' & ' + this.user.password);
         this._http.post("http://localhost:52172/api/token", this.user, { headers: this._authService.contentHeaders() })
             .subscribe(function (response) {
-            console.log(response.json());
             _this._authService.login(response.json());
         });
-        console.log("Post method fired");
+    };
+    LoginComponent.prototype.logout = function () {
+        this._authService.logOut();
     };
     LoginComponent.prototype.onClick = function () {
-        console.log("Button Clicked");
     };
     LoginComponent.prototype.toggleDetails = function () {
         this.showDetails = !this.showDetails;

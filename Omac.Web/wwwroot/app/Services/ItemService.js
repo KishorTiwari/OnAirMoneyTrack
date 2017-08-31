@@ -13,19 +13,25 @@ var core_1 = require("@angular/core");
 var http_1 = require("@angular/http");
 require("rxjs/add/operator/map");
 require("rxjs/add/operator/catch");
-var Item_1 = require("../Models/Item");
+var AuthService_1 = require("./AuthService");
 var ItemService = (function () {
-    function ItemService(http) {
+    function ItemService(http, authService) {
         this.http = http;
+        this.authService = authService;
     }
     ItemService.prototype.getItems = function (groupId) {
-        return new Item_1.Item[4];
+        return this.http.get("http://localhost:52172/api/group/" + groupId + "/item/", { headers: this.authService.authJsonHeader() })
+            .map(function (resp) { return resp.json(); });
+    };
+    ItemService.prototype.getItemsById = function (itemId) {
+        return this.http.get("http://localhost:52172/api/group/44/item/" + itemId, { headers: this.authService.authJsonHeader() })
+            .map(function (resp) { return resp.json(); });
     };
     return ItemService;
 }());
 ItemService = __decorate([
     core_1.Injectable(),
-    __metadata("design:paramtypes", [http_1.Http])
+    __metadata("design:paramtypes", [http_1.Http, AuthService_1.AuthService])
 ], ItemService);
 exports.ItemService = ItemService;
 //# sourceMappingURL=ItemService.js.map

@@ -13,23 +13,23 @@ export class LoginComponent {
     constructor(private _authService: AuthService, public _http: Http) { }
     //public user = new User();
     public user: User = {
-        email: 'kishorsanu1994@gmail.comm',
+        email: 'kishorsanu1994@gmail.com',
         password: 'samsung44'
     };
 
     login(): void {
         let body = 'email=' + this.user.email + '&password=' + this.user.password;
-        console.log(this.user.email + ' & ' + this.user.password);
         this._http.post("http://localhost:52172/api/token", this.user, { headers: this._authService.contentHeaders() })
             .subscribe(response => {
-                console.log(response.json());
                 this._authService.login(response.json());
             });
-        console.log("Post method fired");
+    }
+
+    logout(): void {
+        this._authService.logOut();
     }
 
     onClick(): void {
-        console.log("Button Clicked");
     }
 
     showDetails: boolean = false;
