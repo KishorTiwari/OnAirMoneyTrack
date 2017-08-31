@@ -8,6 +8,7 @@ namespace Omack.Web.Controllers
 {
     public class PartialController : Controller
     {
+        public IActionResult ItemListComponent() { return PartialView(); }
         public IActionResult LoginComponent() { return PartialView(); }
     }
 }

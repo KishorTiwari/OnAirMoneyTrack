@@ -1,0 +1,33 @@
+<div class="panel">
+    <div class="panel-heading">
+        <h3>List of Items</h3>
+    </div>
+    <div class="panel-body">
+        <table class="table table-bordered" *ngIf="hasItems">
+            <thead>
+                <tr>
+                    <td style="width:200px">Id</td>
+                    <td style="width:200px">Name</td>
+                    <td style="width:200px">Price</td>
+                    <td style="width:200px">DOP</td>
+                    <td style="width:200px">Item Type</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of items"> @*//item is call template input variable*@
+                    <td style="width:200px">{{item.id}}</td>
+                    <td style="width:200px">{{item.name}}</td>
+                    <td style="width:200px">{{item.price}}</td>
+                    <td style="width:200px">{{item.dateOfPurchase}}</td>
+                    <td style="width:200px">{{item.itemType}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <h3>
+            {{hasItems? null: "Sorry you dont have any items"}}
+        </h3>
+    </div>
+</div>
+<div>
+    <button (click)="getItemsByGroupId()">Get All</button>
+</div>
