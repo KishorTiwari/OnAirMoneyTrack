@@ -17,12 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="wwwroot\app\Home\home.component.ts" />
-    <Content Include="wwwroot\app\Item\item.component.ts" />
-    <Content Include="wwwroot\app\Login\LoginComponent.ts" />
-    <Content Include="wwwroot\app\Models\Item.ts" />
-    <Content Include="wwwroot\app\Services\AuthService.ts" />
-    <Content Include="wwwroot\app\Services\ItemService.ts" />
+    <Compile Include="wwwroot\src\Services\AuthService.ts" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.1.1" />
