@@ -7,13 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="wwwroot\angular\node_modules\**" />
-    <EmbeddedResource Remove="wwwroot\angular\node_modules\**" />
-    <None Remove="wwwroot\angular\node_modules\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="wwwroot\src\Services\ItemService.ts" />
+    <Compile Remove="wwwroot\node_modules\**" />
+    <EmbeddedResource Remove="wwwroot\node_modules\**" />
+    <None Remove="wwwroot\node_modules\**" />
   </ItemGroup>
 
   <ItemGroup>

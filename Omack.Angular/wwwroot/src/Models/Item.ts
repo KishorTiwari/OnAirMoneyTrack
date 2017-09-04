@@ -1,3 +1,4 @@
+import { Component } from '@angular/core';
 export class Item {
     id: string;
     name: string;
