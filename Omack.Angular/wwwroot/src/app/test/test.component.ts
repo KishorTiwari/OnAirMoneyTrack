@@ -7,4 +7,5 @@ import { Component} from '@angular/core';
 
 export class TestComponent {
     title: string = "This is test component";
+    bannerTitle: string = "This is banner title";
 }
