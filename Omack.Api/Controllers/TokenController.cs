@@ -12,6 +12,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Cors;
+using Omack.Core.Models;
+using Microsoft.AspNetCore.Http;
+using Omack.Core.Constants;
 
 namespace Omack.Api.Controllers
 {
@@ -30,8 +33,9 @@ namespace Omack.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> GenerateToken([FromBody] TokenVM model)
+        public async Task<Result<IActionResult>> GenerateToken([FromBody] TokenVM model)
         {
+            var result = new Result<IActionResult>();
             try
             {
                 var user = await _userManager.FindByEmailAsync(model.Email);
@@ -54,19 +58,37 @@ namespace Omack.Api.Controllers
                             expires: DateTime.UtcNow.AddDays(30),
                             signingCredentials: creds
                             );
-                        return Ok(
-                            new
-                            {
-                                access_token = new JwtSecurityTokenHandler().WriteToken(token),
-                                expires_on = token.ValidTo
-                            });
+                        result.IsSuccess = true;
+                        result.Data = Json(new {
+                            access_token = new JwtSecurityTokenHandler().WriteToken(token),
+                            expires_on = token.ValidTo
+                        });
+
+                        result.StatusCodes = StatusCodes.Status200OK;
+                        return result;                      
+                    }
+                    else
+                    {
+                        result.IsSuccess = false;
+                        result.ErrorMessage = ErrorMessage.InvalidPassword;
+                        result.StatusCodes = StatusCodes.Status401Unauthorized;
+                        return result;
                     }
                 }
-                return BadRequest("");
+                else
+                {
+                    result.IsSuccess = false;
+                    result.ErrorMessage = ErrorMessage.InvalidEmail;
+                    result.StatusCodes = StatusCodes.Status401Unauthorized;
+                    return result;
+                }
             }
             catch (Exception ex)
             {
-                return null;
+                result.IsSuccess = false;
+                result.ErrorMessage = ErrorMessage.Get;
+                result.StatusCodes = StatusCodes.Status500InternalServerError;
+                return result;
             }
         }        
     }

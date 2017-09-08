@@ -7,6 +7,7 @@ import { User } from "../../Models/User";
 @Component({
     selector: 'login',
     templateUrl: 'login.component.html',
+    styleUrls: ['login.component.css']
 })
 
 export class LoginComponent {
@@ -16,20 +17,33 @@ export class LoginComponent {
         email: 'kishorsanu1994@gmail.com',
         password: 'samsung44'
     };
-
+    submitText: string = "Submit";
     authenticationError: string = "Sorry. Username and Password combination did not match.";
     isAuthenticated: boolean = true;
     logIn(): void {
         this.isAuthenticated = true;
+        this.submitText = "Submiting...";
         let body = 'email=' + this.user.email + '&password=' + this.user.password;
         this._http.post("http://localhost:52172/api/token", this.user, { headers: this._authService.contentHeaders() })
             .subscribe(response => {
                 console.log(response.json());
-                this._authService.logIn(response.json());
+                var result = response.json();
+                if (result.isSuccess == true) {
+                    this._authService.logIn(result.data.value);
+                    this.submitText = "Submit";
+                }
+                else if (result.isSuccess == false) {
+                    console.log(result.errorMessage);
+                    this.isAuthenticated = false;
+                    this.authenticationError = result.errorMessage;
+                    this.submitText = "Submit";
+                }
             },
             error => {
                 console.log(error);
+                this.authenticationError = "Error connecting to api server";
                 this.isAuthenticated = false;
+                this.submitText = "Submit";
             }
             );
     }

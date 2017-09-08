@@ -21,6 +21,7 @@ var LoginComponent = (function () {
             email: 'kishorsanu1994@gmail.com',
             password: 'samsung44'
         };
+        this.submitText = "Submit";
         this.authenticationError = "Sorry. Username and Password combination did not match.";
         this.isAuthenticated = true;
         this.showDetails = false;
@@ -29,14 +30,27 @@ var LoginComponent = (function () {
     LoginComponent.prototype.logIn = function () {
         var _this = this;
         this.isAuthenticated = true;
+        this.submitText = "Submiting...";
         var body = 'email=' + this.user.email + '&password=' + this.user.password;
         this._http.post("http://localhost:52172/api/token", this.user, { headers: this._authService.contentHeaders() })
             .subscribe(function (response) {
             console.log(response.json());
-            _this._authService.logIn(response.json());
+            var result = response.json();
+            if (result.isSuccess == true) {
+                _this._authService.logIn(result.data.value);
+                _this.submitText = "Submit";
+            }
+            else if (result.isSuccess == false) {
+                console.log(result.errorMessage);
+                _this.isAuthenticated = false;
+                _this.authenticationError = result.errorMessage;
+                _this.submitText = "Submit";
+            }
         }, function (error) {
             console.log(error);
+            _this.authenticationError = "Error connecting to api server";
             _this.isAuthenticated = false;
+            _this.submitText = "Submit";
         });
     };
     LoginComponent.prototype.logOut = function () {
@@ -53,6 +67,7 @@ LoginComponent = __decorate([
     core_1.Component({
         selector: 'login',
         templateUrl: 'login.component.html',
+        styleUrls: ['login.component.css']
     }),
     __metadata("design:paramtypes", [AuthService_1.AuthService, http_1.Http])
 ], LoginComponent);

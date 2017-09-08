@@ -23,5 +23,9 @@ namespace Omack.Core.Constants
 
         //no data
         public static string NoData { get; set; } = "Sorry. There is no data to return.";
+
+        //login
+        public static string InvalidEmail { get; set; } = "Invalid Email.";
+        public static string InvalidPassword { get; set; } = "Invalid Password.";
     }
 }

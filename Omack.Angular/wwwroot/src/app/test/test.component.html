@@ -1,0 +1,44 @@
+<div class="container">
+  <div class="panel-heading">
+    <h3>List of Items</h3>
+  </div>
+  <div class="panel-body">
+    <test-count
+    [all]="getTotalCount()"
+    [expensive]="getTotalExpensiveCount()"
+    [cheap]="getTotalCheapCount()"
+    ></test-count>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <td style="width:200px">Id</td>
+          <td style="width:200px">Name</td>
+          <td style="width:200px">Price</td>
+          <td style="width:200px">DOP</td>
+          <td style="width:200px">Item Type</td>
+          <td>IsFirstElement</td>
+          <td>IsLastElement</td>
+          <td>IsEven</td>
+        </tr>
+      </thead>
+      <tbody>
+        <!--//first, last, even, odd - all are properties of ng directive-->
+        <tr *ngFor="let item of items; trackBy:trackByItemId; let isFirst=first; let isLast=last; let isEven=even" [style.color]="isLast? 'red': null">
+          <td style="width:200px">{{item.id}}</td>
+          <td style="width:200px">{{item.name | itemType: item.price}}</td>  <!--//it has two parameters (value, price). But value is injected by default which is item.name in this case. and second, you have to pass it-->
+          <td style="width:200px">{{item.price | currency: 'NZD':true:'1.2-3'}}</td> <!--// currency takes multiples params. True give currency symbol ($ for USD example). And 1.2-3 means, min 1 digit before dot and min 2 but max 3 digits after dots.-->
+          <td style="width:200px">{{item.dateOfPurchase | date: 'dd/MM/y' | uppercase}}</td>
+          <td style="width:200px">{{item.itemType}}</td>
+          <td>{{isFirst}}</td>
+          <td>{{isLast}}</td>
+          <td>{{isEven? "Even": "Odd"}}</td>
+        </tr>
+        <tr *ngIf="!items || items.lenth==0">
+          <td colspan="5">Sorry you dont have any items</td>
+        </tr>
+      </tbody>
+    </table>
+    <button (click)="getItemsByGroupId()">Get All</button>
+  </div>
+</div>
+

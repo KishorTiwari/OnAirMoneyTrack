@@ -1,0 +1,21 @@
+div {
+  font-family: muli
+}
+#form-container {
+   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.27);
+   background-color: white;
+   padding-top: 20px;
+   padding-bottom: 20px;
+ }
+#div-app-title {
+  padding: 5px 10px 5px 10px;
+  background-color: #009888;
+  color: #ffffff;
+  font-family: muli;
+  font-weight: 700;
+  text-align: center;
+}
+#form-container {
+  margin-top: 15vh;
+  max-width: 350px;
+}

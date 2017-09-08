@@ -9,10 +9,13 @@ import { AuthService } from "../Services/AuthService";
 import { ItemService } from "../Services/ItemService";
 import { ItemComponent } from './item/item.component';
 import { EmailValidator } from '@angular/forms'
+import { TestComponent } from "./test/test.component";
+import { ItemTypePipe } from "./test/test.pipe";
+import { TestTypeCountComponent } from "./test/test.typecount.component";
 
 @NgModule({
     declarations: [
-        AppComponent, LoginComponent, ItemComponent
+        AppComponent, LoginComponent, ItemComponent, TestComponent, ItemTypePipe, TestTypeCountComponent
   ],
   imports: [
       BrowserModule, FormsModule, HttpModule

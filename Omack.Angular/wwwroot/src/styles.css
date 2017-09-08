@@ -1,8 +1,18 @@
 /* You can add global styles to this file, and also import other style files */
-.btn{
+.btn {
   border-radius: 0px;
 }
-.form-control{
+
+.form-control {
   border-radius: 0px;
   box-shadow: 0px;
+  border: 1px solid black;
+}
+
+body, html {
+  background-color: #efefef;
+}
+
+label{
+  font-weight: 400;
 }

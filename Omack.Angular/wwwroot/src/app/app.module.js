@@ -15,6 +15,9 @@ var http_1 = require("@angular/http");
 var AuthService_1 = require("../Services/AuthService");
 var ItemService_1 = require("../Services/ItemService");
 var item_component_1 = require("./item/item.component");
+var test_component_1 = require("./test/test.component");
+var test_pipe_1 = require("./test/test.pipe");
+var test_typecount_component_1 = require("./test/test.typecount.component");
 var AppModule = (function () {
     function AppModule() {
     }
@@ -23,7 +26,7 @@ var AppModule = (function () {
 AppModule = __decorate([
     core_1.NgModule({
         declarations: [
-            app_component_1.AppComponent, login_component_1.LoginComponent, item_component_1.ItemComponent
+            app_component_1.AppComponent, login_component_1.LoginComponent, item_component_1.ItemComponent, test_component_1.TestComponent, test_pipe_1.ItemTypePipe, test_typecount_component_1.TestTypeCountComponent
         ],
         imports: [
             platform_browser_1.BrowserModule, forms_1.FormsModule, http_1.HttpModule

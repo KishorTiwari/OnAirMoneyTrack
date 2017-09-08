@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 export class Item {
-    id: string;
+    id: number;
     name: string;
     price: number;
     dateOfPurchase: Date;
