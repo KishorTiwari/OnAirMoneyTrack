@@ -14,8 +14,8 @@ export class LoginComponent {
     constructor(private _authService: AuthService, public _http: Http) { }
     //public user = new User();
     public user: User = {
-        email: 'kishorsanu1994@gmail.com',
-        password: 'samsung44'
+        email: 'kamal.lamgade@outlook.comxx',
+        password: 'Auckland021!'
     };
     submitText: string = "Submit";
     authenticationError: string = "Sorry. Username and Password combination did not match.";

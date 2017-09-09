@@ -18,8 +18,8 @@ var LoginComponent = (function () {
         this._http = _http;
         //public user = new User();
         this.user = {
-            email: 'kishorsanu1994@gmail.com',
-            password: 'samsung44'
+            email: 'kamal.lamgade@outlook.comxx',
+            password: 'Auckland021!'
         };
         this.submitText = "Submit";
         this.authenticationError = "Sorry. Username and Password combination did not match.";

@@ -16,7 +16,7 @@ var TestComponent = (function () {
     function TestComponent(itemService) {
         this.itemService = itemService;
         this.itemId = 46;
-        this.groupId = 31;
+        this.groupId = 3;
         //itemService.getItems(this.groupId).subscribe((result: Item[]) => this.items = result);
     }
     //runs after all the dependencies, functions and properties of component are initialized.

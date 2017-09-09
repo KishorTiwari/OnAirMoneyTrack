@@ -13,6 +13,8 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using AutoMapper;
 using Omack.Api.ViewModels;
+using Omack.Services.Models;
+using Omack.Api.Filters;
 
 namespace Omack.Api.Controllers
 {
@@ -55,6 +57,22 @@ namespace Omack.Api.Controllers
                 return Ok(groupsVM);
             }
             return new StatusCodeResult(result.StatusCodes);
+        }
+
+        [HttpPost(Name = "CreateGroup")]
+        [ValidateModel]
+        public IActionResult CreateGroup([FromBody]GroupVM groupVM)
+        {
+                var groupServiceModel = _mapper.Map<GroupServiceModel>(groupVM);
+                var result = _groupService.Add(groupServiceModel, _currentUserId);
+                if (result.IsSuccess)
+                {
+                    return Ok(result.Data);
+                }
+                else
+                {
+                    return new StatusCodeResult(result.StatusCodes);
+                }
         }
     }
 }
