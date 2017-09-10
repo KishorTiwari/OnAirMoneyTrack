@@ -45,15 +45,15 @@ namespace Omack.Api.Controllers
                 return Ok(group);
             }
             return new StatusCodeResult(result.StatusCodes);
-        }    
-        
+        }
+
         [HttpGet()]
         public IActionResult GetGroupsByUserID()
         {
             var result = _groupService.GetAll(_currentUserId);
             if (result.IsSuccess)
             {
-                var groupsVM = _mapper.Map<ItemVM>(result.Data);
+                var groupsVM = _mapper.Map<IList<GroupVM>>(result.Data);
                 return Ok(groupsVM);
             }
             return new StatusCodeResult(result.StatusCodes);
@@ -63,16 +63,16 @@ namespace Omack.Api.Controllers
         [ValidateModel]
         public IActionResult CreateGroup([FromBody]GroupVM groupVM)
         {
-                var groupServiceModel = _mapper.Map<GroupServiceModel>(groupVM);
-                var result = _groupService.Add(groupServiceModel, _currentUserId);
-                if (result.IsSuccess)
-                {
-                    return Ok(result.Data);
-                }
-                else
-                {
-                    return new StatusCodeResult(result.StatusCodes);
-                }
+            var groupServiceModel = _mapper.Map<GroupServiceModel>(groupVM);
+            var result = _groupService.Add(groupServiceModel, _currentUserId);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Data);
+            }
+            else
+            {
+                return new StatusCodeResult(result.StatusCodes);
+            }
         }
     }
 }
