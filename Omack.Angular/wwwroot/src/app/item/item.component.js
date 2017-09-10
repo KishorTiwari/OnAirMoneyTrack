@@ -29,7 +29,6 @@ var ItemComponent = (function () {
         var _this = this;
         this.items = null;
         this.itemService.getItems(this.groupId).subscribe(function (data) {
-            console.log(data);
             _this.items = data;
             _this.hasItems = true;
         }, function (err) { return _this.hasItems = false; }, function () { return console.log("Success"); });

@@ -25,7 +25,7 @@ export class TestComponent implements OnInit {
     item: Item;
     itemId: number = 46;
     items: Item[];
-    groupId: number = 3;
+    groupId: number = 31;
 
 
     //methods

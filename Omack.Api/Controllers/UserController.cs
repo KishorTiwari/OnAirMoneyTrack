@@ -57,5 +57,12 @@ namespace Omack.Api.Controllers
                 return Ok("This email already exists");
             }
         }
+
+        [HttpPost(Name = "MakeGroupAdmin")]
+        [ValidateModel]
+        public IActionResult MakeGroupAdmin(int userId)
+        {
+            return null;
+        }
     }
 }

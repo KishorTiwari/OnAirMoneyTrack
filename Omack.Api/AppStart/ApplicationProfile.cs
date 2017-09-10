@@ -15,8 +15,8 @@ namespace Omack.Api.AppStart
     {
         public ApplicationProfile()
         {
-            CreateMap<Group, GroupServiceModel>().ReverseMap();
-            CreateMap<GroupVM, GroupServiceModel>().ReverseMap();
+            CreateMap<GroupServiceModel, Group>().ReverseMap();
+            CreateMap<GroupServiceModel, GroupVM>().ReverseMap();
 
             CreateMap<ItemServiceModel, Item>().ReverseMap();
             CreateMap<ItemServiceModel, ItemVM>().ReverseMap();

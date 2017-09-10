@@ -28,7 +28,6 @@ export class ItemComponent {
         this.items = null;
         this.itemService.getItems(this.groupId).subscribe(
             (data: Item[]) => {
-                console.log(data);
                 this.items = data;
                 this.hasItems = true;
             },
