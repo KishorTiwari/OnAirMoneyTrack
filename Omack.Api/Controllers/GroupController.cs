@@ -53,7 +53,7 @@ namespace Omack.Api.Controllers
             var result = _groupService.GetAll(_currentUserId);
             if (result.IsSuccess)
             {
-                var groupsVM = _mapper.Map<ItemVM>(result.Data);
+                var groupsVM = _mapper.Map<IList<GroupVM>>(result.Data);
                 return Ok(groupsVM);
             }
             return new StatusCodeResult(result.StatusCodes);
