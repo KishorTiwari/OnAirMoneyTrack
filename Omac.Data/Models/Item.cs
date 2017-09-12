@@ -11,21 +11,19 @@ namespace Omack.Data.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        [Required]
+
         [MaxLength(50)]
         public string Name { get; set; }
-        [Required]
+
         [MaxLength(50)]
-        public decimal Price { get; set; }
+        public decimal? Price { get; set; }
         public DateTime DateOfPurchase { get; set; }
-        [Required]
-        public int ItemType { get; set; }
-        [Required]
+        public int? ItemType { get; set; }
         public Boolean  IsActive { get; set; }
         
         //Foreign Keys
-        public int UserId { get; set; }
-        public int GroupId { get; set; }
+        public int? UserId { get; set; }
+        public int? GroupId { get; set; }
         public int? MediaId { get; set; }
        
         //Navigation Properties

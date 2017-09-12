@@ -11,6 +11,8 @@ using Omack.Core.Models;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Omack.Core.Constants;
+using Omack.Services.Models.Group;
+using Microsoft.AspNetCore.Http;
 
 namespace Omack.Services.ServiceImplementations
 {
@@ -30,9 +32,9 @@ namespace Omack.Services.ServiceImplementations
         }
 
         //Functions
-        public Result<GroupServiceModel> Add(GroupServiceModel group, int userId)
+        public Result<GroupServiceGM> Add(GroupServicePM group, CurrentUser currentUser)
         {
-            var result = new Result<GroupServiceModel>();
+            var result = new Result<GroupServiceGM>();
 
             //initialize transaction 
             var transaction = _unitOfWork.BeginTransaction();
@@ -43,11 +45,9 @@ namespace Omack.Services.ServiceImplementations
                 {
                     Name = group.Name,
                     IsActive = true,
-                    MediaId = group.MediaId,
+                    MediaId = 2,
                     CreatedOn = Application.CurrentDate,
-                    CreatedBy = userId,
-                    UpdatedOn = Application.CurrentDate,
-                    UpdatedBy = userId
+                    CreatedBy = currentUser.Id
                 };
                 _unitOfWork.GroupRepository.Add(newGroup);
                 _unitOfWork.Save();
@@ -55,8 +55,9 @@ namespace Omack.Services.ServiceImplementations
                 var newGroupUser = new Group_User()
                 {
                     GroupId = newGroup.Id,
-                    UserId = userId,
-                    IsActive = true
+                    UserId = currentUser.Id,
+                    IsActive = true,
+                    IsAdmin = true,
                 };
                 _unitOfWork.GroupUserRepository.Add(newGroupUser);
                 _unitOfWork.Save();
@@ -65,10 +66,18 @@ namespace Omack.Services.ServiceImplementations
                 transaction.commit();
 
                 //return mapped new group
-                var mappedNewGroup = _mapper.Map<GroupServiceModel>(newGroup); 
-
+                var mediaUrl = _unitOfWork.MediaRepository.GetById((int)newGroup.MediaId).Url;
+                var groupGM = new GroupServiceGM()
+                {
+                    Id = newGroup.Id,
+                    Name = newGroup.Name,
+                    IsAdmin = newGroupUser.IsAdmin,
+                    MediaUrl = mediaUrl,
+                    CreatedOn = newGroup.CreatedOn,
+                    CreatedBy = currentUser.Name
+                };              
                 result.IsSuccess = true;
-                result.Data = mappedNewGroup;
+                result.Data = groupGM;
                 return result;
             }
             catch(Exception ex)
@@ -82,28 +91,28 @@ namespace Omack.Services.ServiceImplementations
             }          
         }
 
-        public Result<GroupServiceModel> Delete(int Id, int userId)
+        public Result<GroupServiceGM> Delete(int Id, CurrentUser currentUser)
         {
-            var result = new Result<GroupServiceModel>();
+            var result = new Result<GroupServiceGM>();
 
             //initialize transaction
             var transaction = _unitOfWork.BeginTransaction();
 
             try
             {               
-                var dbGroup = _unitOfWork.GroupRepository.GetSingle(x =>x.Id == Id && x.IsActive && x.Id == Id && x.Group_Users.All(y => y.UserId == userId && y.IsActive == true));
+                var dbGroup = _unitOfWork.GroupRepository.GetSingle(x =>x.Id == Id && x.IsActive && x.Id == Id && x.Group_Users.All(y => y.UserId == currentUser.Id && y.IsActive == true));
                 if(dbGroup != null)
                 {                   
                     //IsActive to false for group
                     dbGroup.IsActive = false;
-                    dbGroup.UpdatedBy = userId;
+                    dbGroup.UpdatedBy = currentUser.Id;
                     dbGroup.UpdatedOn = Application.CurrentDate;
                     _unitOfWork.Save();
 
                     //IsActive to false for GroupUser 
-                    var dbGroupUser = _unitOfWork.GroupUserRepository.GetSingle(x => x.Group.Id == dbGroup.Id && x.UserId == userId);
+                    var dbGroupUser = _unitOfWork.GroupUserRepository.GetSingle(x => x.Group.Id == dbGroup.Id && x.UserId == currentUser.Id);
                     dbGroupUser.IsActive = false;
-                    dbGroupUser.UpdatedBy = userId;
+                    dbGroupUser.UpdatedBy = currentUser.Id;
                     dbGroupUser.UpdatedOn = Application.CurrentDate;
 
                    // _unitOfWork.GroupRepository.Update(dbGroup);
@@ -113,9 +122,19 @@ namespace Omack.Services.ServiceImplementations
                     transaction.commit();
 
                     //return deleted Group
-                    var updatedGroup = _mapper.Map<GroupServiceModel>(dbGroup);                     
+                    var groupServiceGM = new GroupServiceGM()
+                    {
+                        Id = dbGroup.Id,
+                        Name = dbGroup.Name,
+                        MediaUrl = dbGroup.Media.Url,
+                        CreatedOn = dbGroup.CreatedOn,
+                        CreatedBy = currentUser.Name,
+                        UpdatedOn = dbGroup.UpdatedOn,
+                        UpdatedBy = currentUser.Name
+                    };                  
                     result.IsSuccess = true;
-                    result.Data = updatedGroup;
+                    result.Data = groupServiceGM;
+                    result.StatusCodes = StatusCodes.Status200OK;
                     return result;
                 }
                 else
@@ -135,24 +154,24 @@ namespace Omack.Services.ServiceImplementations
             }
         }
 
-        public Result<IList<GroupServiceModel>> GetAll(int userId)
+        public Result<IList<GroupServiceGM>> GetAll(CurrentUser currentUser)
         {
-            var result = new Result<IList<GroupServiceModel>>();
+            var result = new Result<IList<GroupServiceGM>>();
             try
             {
-                var groups = _unitOfWork.GroupRepository.GetAll(x=> x.IsActive == true && x.Group_Users.All(y=>y.UserId == userId && x.IsActive == true));
+                var groups = _unitOfWork.GroupRepository.GetAll(x=> x.IsActive == true && x.Group_Users.All(y=>y.UserId == currentUser.Id && x.IsActive == true));
                 if (groups.Any())
                 {
-                    var groupService = groups.Select(group => new GroupServiceModel
+                    var groupService = groups.Select(group => new GroupServiceGM
                     {
                         Id = group.Id,
                         Name = group.Name,
-                        IsActive = group.IsActive,
-                        MediaId = group.MediaId,
+                        MediaUrl = group.Media.Url,
                         CreatedOn = group.CreatedOn,
-                        CreatedBy = group.CreatedBy,
+                        CreatedBy = group.Group_Users.FirstOrDefault(gu=>gu.UserId == currentUser.Id).User.UserName,
                         UpdatedOn = group.UpdatedOn,
-                        UpdatedBy = group.UpdatedBy
+                        UpdatedBy = group.Group_Users.FirstOrDefault(gu => gu.UserId == currentUser.Id).User.UserName,
+                        IsAdmin = group.Group_Users.FirstOrDefault(gp => gp.UserId == currentUser.Id).IsAdmin                     
                     }).ToList();
 
                     result.IsSuccess = true;
@@ -175,24 +194,37 @@ namespace Omack.Services.ServiceImplementations
             }
         }
 
-        public Result<GroupServiceModel> GetById(int id, int userId)
+        public Result<GroupServiceGM> GetById(int id, CurrentUser currentUser)
         {
-            var result = new Result<GroupServiceModel>();
+            var result = new Result<GroupServiceGM>();
             try
             {
-                var dbGroup = _unitOfWork.GroupRepository.GetSingle(x =>x.Id == id && x.IsActive == true && x.Group_Users.All(y => y.IsActive == true && y.UserId == userId));
+                var dbGroup = _unitOfWork.GroupRepository.GetSingle(x =>x.Id == id && x.IsActive == true && x.Group_Users.All(y => y.IsActive == true && y.UserId == currentUser.Id));
                 if(dbGroup == null)
                 {
                     result.IsSuccess = false;
                     result.ErrorMessage = ErrorMessage.GetUnAuth;
+                    result.StatusCodes = StatusCodes.Status401Unauthorized;
                     return result;
                 }
                 else
-                {             
+                {
                     //Use mapper because data is being returned from database. Hence, all properties has data.
-                    var group = _mapper.Map<GroupServiceModel>(dbGroup);
+                    var groupServeGM = new GroupServiceGM()
+                    {
+                        Id = dbGroup.Id,
+                        Name = dbGroup.Name,
+                        MediaUrl = dbGroup.Media.Url,
+                        CreatedOn = dbGroup.CreatedOn,
+                        CreatedBy = dbGroup.Group_Users.FirstOrDefault(gu => gu.UserId == currentUser.Id).User.UserName,
+                        UpdatedOn = dbGroup.UpdatedOn,
+                        UpdatedBy = dbGroup.Group_Users.FirstOrDefault(gu => gu.UserId == currentUser.Id).User.UserName,
+                        IsAdmin = dbGroup.Group_Users.FirstOrDefault(gp => gp.UserId == currentUser.Id).IsAdmin,
+                    };
+
                     result.IsSuccess = true;
-                    result.Data = group;
+                    result.Data = groupServeGM;
+                    result.StatusCodes = StatusCodes.Status200OK; ;
                     return result;
                 }
             }
@@ -201,48 +233,54 @@ namespace Omack.Services.ServiceImplementations
                 _logger.LogError(ex.InnerException.Message);
                 result.IsSuccess = false;
                 result.ErrorMessage = ErrorMessage.Get;
+                result.StatusCodes = StatusCodes.Status500InternalServerError;
                 return result;
             }
         }
 
-        public Result<GroupServiceModel> Update(GroupServiceModel groupModel, int userId)
+        public Result<GroupServiceGM> Update(GroupServicePM group, CurrentUser currentUser)
         {
-            var result = new Result<GroupServiceModel>();
-            try
-            {
-                var groupEntity = _unitOfWork.GroupRepository.GetSingle(x => x.Id == groupModel.Id && x.IsActive);
-
-                if(groupEntity != null)
-                {
-                    var group = _mapper.Map<Group>(groupModel);
-
-                    //append system properties as mapper map to null
-                    group.UpdatedBy = userId;
-                    group.UpdatedOn = Application.CurrentDate;
-
-                    _unitOfWork.GroupRepository.Update(group);
-                    _unitOfWork.Save();
-
-                    //map it to GroupServiceModel 
-                    var updatedGroup = _mapper.Map<GroupServiceModel>(group);
-                    result.IsSuccess = true;
-                    result.Data = updatedGroup;
-                    return result;
-                }
-                else
-                {
-                    result.IsSuccess = false;
-                    result.ErrorMessage = ErrorMessage.UpdateUnAuth;
-                    return result;
-                }               
-            }
-            catch(Exception ex)
-            {
-                _logger.LogError(ex.InnerException.Message);
-                result.IsSuccess = false;
-                result.ErrorMessage = ErrorMessage.Update;
-                return result;
-            }
+            throw new NotImplementedException();
         }
+
+        //public Result<GroupServiceGM> Update(GroupServicePM groupModel, CurrentUser currentUser)
+        //{
+        //    var result = new Result<GroupServiceModel>();
+        //    try
+        //    {
+        //        var groupEntity = _unitOfWork.GroupRepository.GetSingle(x => x.Id == groupModel.Id && x.IsActive);
+
+        //        if(groupEntity != null)
+        //        {
+        //            var group = _mapper.Map<Group>(groupModel);
+
+        //            //append system properties as mapper map to null
+        //            group.UpdatedBy = currentUser.Id;
+        //            group.UpdatedOn = Application.CurrentDate;
+
+        //            _unitOfWork.GroupRepository.Update(group);
+        //            _unitOfWork.Save();
+
+        //            //map it to GroupServiceModel 
+        //            var updatedGroup = _mapper.Map<GroupServiceModel>(group);
+        //            result.IsSuccess = true;
+        //            result.Data = updatedGroup;
+        //            return result;
+        //        }
+        //        else
+        //        {
+        //            result.IsSuccess = false;
+        //            result.ErrorMessage = ErrorMessage.UpdateUnAuth;
+        //            return result;
+        //        }               
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        _logger.LogError(ex.InnerException.Message);
+        //        result.IsSuccess = false;
+        //        result.ErrorMessage = ErrorMessage.Update;
+        //        return result;
+        //    }
+        //}
     }
 }

@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Operations;
 using Omack.Api.ViewModels;
+using Omack.Api.ViewModels.Group;
 using Omack.Data.Models;
 using Omack.Services.Models;
+using Omack.Services.Models.Group;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,8 +17,8 @@ namespace Omack.Api.AppStart
     {
         public ApplicationProfile()
         {
-            CreateMap<GroupServiceModel, Group>().ReverseMap();
-            CreateMap<GroupServiceModel, GroupVM>().ReverseMap();
+            CreateMap<GroupViewPM, GroupServicePM>().ReverseMap();
+            CreateMap<GroupViewGM, GroupServiceGM>().ReverseMap();
 
             CreateMap<ItemServiceModel, Item>().ReverseMap();
             CreateMap<ItemServiceModel, ItemVM>().ReverseMap();

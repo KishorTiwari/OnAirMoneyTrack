@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Omack.Data.OmackMigration
 {
-    public partial class initomack : Migration
+    public partial class initialomack : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -60,7 +60,7 @@ namespace Omack.Data.OmackMigration
                         column: x => x.RoleId,
                         principalTable: "Role",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
@@ -71,12 +71,12 @@ namespace Omack.Data.OmackMigration
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreatedBy = table.Column<int>(nullable: true),
                     CreatedOn = table.Column<DateTime>(nullable: true),
-                    GroupId = table.Column<int>(nullable: false),
+                    GroupId = table.Column<int>(nullable: true),
                     IsActive = table.Column<bool>(nullable: false),
                     IsAdmin = table.Column<bool>(nullable: false),
                     UpdatedBy = table.Column<int>(nullable: true),
                     UpdatedOn = table.Column<DateTime>(nullable: true),
-                    UserId = table.Column<int>(nullable: false)
+                    UserId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -92,15 +92,15 @@ namespace Omack.Data.OmackMigration
                     CreatedBy = table.Column<int>(nullable: true),
                     CreatedOn = table.Column<DateTime>(nullable: true),
                     DateOfPurchase = table.Column<DateTime>(nullable: false),
-                    GroupId = table.Column<int>(nullable: false),
+                    GroupId = table.Column<int>(nullable: true),
                     IsActive = table.Column<bool>(nullable: false),
-                    ItemType = table.Column<int>(nullable: false),
+                    ItemType = table.Column<int>(nullable: true),
                     MediaId = table.Column<int>(nullable: true),
-                    Name = table.Column<string>(maxLength: 50, nullable: false),
-                    Price = table.Column<decimal>(maxLength: 50, nullable: false),
+                    Name = table.Column<string>(maxLength: 50, nullable: true),
+                    Price = table.Column<decimal>(maxLength: 50, nullable: true),
                     UpdatedBy = table.Column<int>(nullable: true),
                     UpdatedOn = table.Column<DateTime>(nullable: true),
-                    UserId = table.Column<int>(nullable: false)
+                    UserId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -116,11 +116,12 @@ namespace Omack.Data.OmackMigration
                     CreatedBy = table.Column<int>(nullable: true),
                     CreatedOn = table.Column<DateTime>(nullable: true),
                     Description = table.Column<string>(maxLength: 250, nullable: true),
-                    GroupId = table.Column<int>(nullable: false),
+                    GroupId = table.Column<int>(nullable: true),
                     IsActive = table.Column<bool>(nullable: false),
+                    Type = table.Column<int>(nullable: true),
                     UpdatedBy = table.Column<int>(nullable: true),
                     UpdatedOn = table.Column<DateTime>(nullable: true),
-                    UserId = table.Column<int>(nullable: false)
+                    UserId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -133,18 +134,17 @@ namespace Omack.Data.OmackMigration
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Amount = table.Column<decimal>(nullable: false),
+                    Amount = table.Column<decimal>(nullable: true),
                     CreatedBy = table.Column<int>(nullable: true),
                     CreatedOn = table.Column<DateTime>(nullable: true),
-                    GroupId = table.Column<int>(nullable: false),
+                    GroupId = table.Column<int>(nullable: true),
                     IsActive = table.Column<bool>(nullable: false),
                     IsComplete = table.Column<bool>(nullable: false),
                     ReceiverId = table.Column<int>(nullable: true),
                     SenderId = table.Column<int>(nullable: true),
-                    TypeId = table.Column<int>(nullable: false),
                     UpdatedBy = table.Column<int>(nullable: true),
                     UpdatedOn = table.Column<DateTime>(nullable: true),
-                    UserId = table.Column<int>(nullable: false)
+                    UserId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -159,10 +159,10 @@ namespace Omack.Data.OmackMigration
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreatedBy = table.Column<int>(nullable: true),
                     CreatedOn = table.Column<DateTime>(nullable: true),
-                    Guid = table.Column<Guid>(nullable: false),
+                    Guid = table.Column<Guid>(nullable: true),
                     IsActive = table.Column<bool>(nullable: false),
                     TransactionId = table.Column<int>(nullable: true),
-                    TypeId = table.Column<int>(nullable: false),
+                    TypeId = table.Column<int>(nullable: true),
                     UpdatedBy = table.Column<int>(nullable: true),
                     UpdatedOn = table.Column<DateTime>(nullable: true),
                     Url = table.Column<string>(nullable: true)
@@ -258,7 +258,7 @@ namespace Omack.Data.OmackMigration
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
@@ -278,7 +278,7 @@ namespace Omack.Data.OmackMigration
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
@@ -296,13 +296,13 @@ namespace Omack.Data.OmackMigration
                         column: x => x.RoleId,
                         principalTable: "Role",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_UserRole_User_UserId",
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateIndex(
@@ -411,7 +411,7 @@ namespace Omack.Data.OmackMigration
                 column: "UserId",
                 principalTable: "User",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Group_User_Group_GroupId",
@@ -419,7 +419,7 @@ namespace Omack.Data.OmackMigration
                 column: "GroupId",
                 principalTable: "Group",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Item_User_UserId",
@@ -427,7 +427,7 @@ namespace Omack.Data.OmackMigration
                 column: "UserId",
                 principalTable: "User",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Item_Media_MediaId",
@@ -443,7 +443,7 @@ namespace Omack.Data.OmackMigration
                 column: "GroupId",
                 principalTable: "Group",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Notification_User_UserId",
@@ -451,7 +451,7 @@ namespace Omack.Data.OmackMigration
                 column: "UserId",
                 principalTable: "User",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Notification_Group_GroupId",
@@ -459,7 +459,7 @@ namespace Omack.Data.OmackMigration
                 column: "GroupId",
                 principalTable: "Group",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Transaction_User_UserId",
@@ -467,7 +467,7 @@ namespace Omack.Data.OmackMigration
                 column: "UserId",
                 principalTable: "User",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Transaction_Group_GroupId",
@@ -475,7 +475,7 @@ namespace Omack.Data.OmackMigration
                 column: "GroupId",
                 principalTable: "Group",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

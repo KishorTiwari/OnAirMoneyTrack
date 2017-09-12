@@ -8,9 +8,10 @@ using Omack.Data.DAL;
 namespace Omack.Data.OmackMigration
 {
     [DbContext(typeof(OmackContext))]
-    partial class OmackContextModelSnapshot : ModelSnapshot
+    [Migration("20170910073535_del-nav-properties-from-media")]
+    partial class delnavpropertiesfrommedia
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
@@ -424,7 +425,7 @@ namespace Omack.Data.OmackMigration
             modelBuilder.Entity("Omack.Data.Models.Group", b =>
                 {
                     b.HasOne("Omack.Data.Models.Media", "Media")
-                        .WithMany("Groups")
+                        .WithMany()
                         .HasForeignKey("MediaId");
                 });
 

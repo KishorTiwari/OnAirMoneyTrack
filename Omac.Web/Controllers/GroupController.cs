@@ -43,22 +43,22 @@ namespace Omack.Web.Controllers
         }
         public IActionResult Create()
         {
-            var group = new GroupViewModel
-            {
-                Name = "Bhuwan Group"              
-            };
+            //var group = new GroupViewModel
+            //{
+            //    Name = "Bhuwan Group"              
+            //};
 
-            var groupServiceModel = _mapper.Map<GroupServiceModel>(group);
-            var result = _groupService.Add(groupServiceModel, _siteUtils.CurrentUser.Id);
-            if (result.IsSuccess)
-            {
-                return Ok(result.Data);
-            }
-            else
-            {
-                return Ok($"Error: {result.ErrorMessage}");
-            }
-            
+            //var groupServiceModel = _mapper.Map<GroupServiceModel>(group);
+            //var result = _groupService.Add(groupServiceModel, _siteUtils.CurrentUser.Id);
+            //if (result.IsSuccess)
+            //{
+            //    return Ok(result.Data);
+            //}
+            //else
+            //{
+            //    return Ok($"Error: {result.ErrorMessage}");
+            //}
+            return null;
         }
         public IActionResult Delete(int Id)
         {

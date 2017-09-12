@@ -8,8 +8,8 @@ using Omack.Data.DAL;
 namespace Omack.Data.OmackMigration
 {
     [DbContext(typeof(OmackContext))]
-    [Migration("20170714064315_set-not-null-fields")]
-    partial class setnotnullfields
+    [Migration("20170910070428_initial-omack")]
+    partial class initialomack
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -112,7 +112,6 @@ namespace Omack.Data.OmackMigration
                     b.Property<int?>("MediaId");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasMaxLength(50);
 
                     b.Property<int?>("UpdatedBy");
@@ -136,7 +135,7 @@ namespace Omack.Data.OmackMigration
 
                     b.Property<DateTime?>("CreatedOn");
 
-                    b.Property<int>("GroupId");
+                    b.Property<int?>("GroupId");
 
                     b.Property<bool>("IsActive");
 
@@ -146,7 +145,7 @@ namespace Omack.Data.OmackMigration
 
                     b.Property<DateTime?>("UpdatedOn");
 
-                    b.Property<int>("UserId");
+                    b.Property<int?>("UserId");
 
                     b.HasKey("Id");
 
@@ -168,26 +167,25 @@ namespace Omack.Data.OmackMigration
 
                     b.Property<DateTime>("DateOfPurchase");
 
-                    b.Property<int>("GroupId");
+                    b.Property<int?>("GroupId");
 
                     b.Property<bool>("IsActive");
 
-                    b.Property<int>("ItemType");
+                    b.Property<int?>("ItemType");
 
                     b.Property<int?>("MediaId");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasMaxLength(50);
 
-                    b.Property<decimal>("Price")
+                    b.Property<decimal?>("Price")
                         .HasMaxLength(50);
 
                     b.Property<int?>("UpdatedBy");
 
                     b.Property<DateTime?>("UpdatedOn");
 
-                    b.Property<int>("UserId");
+                    b.Property<int?>("UserId");
 
                     b.HasKey("Id");
 
@@ -210,20 +208,19 @@ namespace Omack.Data.OmackMigration
 
                     b.Property<DateTime?>("CreatedOn");
 
-                    b.Property<Guid>("Guid");
+                    b.Property<Guid?>("Guid");
 
                     b.Property<bool>("IsActive");
 
                     b.Property<int?>("TransactionId");
 
-                    b.Property<int>("TypeId");
+                    b.Property<int?>("TypeId");
 
                     b.Property<int?>("UpdatedBy");
 
                     b.Property<DateTime?>("UpdatedOn");
 
-                    b.Property<string>("Url")
-                        .IsRequired();
+                    b.Property<string>("Url");
 
                     b.HasKey("Id");
 
@@ -242,18 +239,19 @@ namespace Omack.Data.OmackMigration
                     b.Property<DateTime?>("CreatedOn");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(250);
 
-                    b.Property<int>("GroupId");
+                    b.Property<int?>("GroupId");
 
                     b.Property<bool>("IsActive");
+
+                    b.Property<int?>("Type");
 
                     b.Property<int?>("UpdatedBy");
 
                     b.Property<DateTime?>("UpdatedOn");
 
-                    b.Property<int>("UserId");
+                    b.Property<int?>("UserId");
 
                     b.HasKey("Id");
 
@@ -300,13 +298,13 @@ namespace Omack.Data.OmackMigration
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<decimal>("Amount");
+                    b.Property<decimal?>("Amount");
 
                     b.Property<int?>("CreatedBy");
 
                     b.Property<DateTime?>("CreatedOn");
 
-                    b.Property<int>("GroupId");
+                    b.Property<int?>("GroupId");
 
                     b.Property<bool>("IsActive");
 
@@ -316,13 +314,11 @@ namespace Omack.Data.OmackMigration
 
                     b.Property<int?>("SenderId");
 
-                    b.Property<int>("TypeId");
-
                     b.Property<int?>("UpdatedBy");
 
                     b.Property<DateTime?>("UpdatedOn");
 
-                    b.Property<int>("UserId");
+                    b.Property<int?>("UserId");
 
                     b.HasKey("Id");
 
@@ -444,21 +440,18 @@ namespace Omack.Data.OmackMigration
                 {
                     b.HasOne("Omack.Data.Models.Group", "Group")
                         .WithMany("Group_Users")
-                        .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("GroupId");
 
                     b.HasOne("Omack.Data.Models.User", "User")
                         .WithMany("Group_Users")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Omack.Data.Models.Item", b =>
                 {
                     b.HasOne("Omack.Data.Models.Group", "Group")
                         .WithMany()
-                        .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("GroupId");
 
                     b.HasOne("Omack.Data.Models.Media", "Media")
                         .WithOne("Item")
@@ -466,8 +459,7 @@ namespace Omack.Data.OmackMigration
 
                     b.HasOne("Omack.Data.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Omack.Data.Models.Media", b =>
@@ -481,26 +473,22 @@ namespace Omack.Data.OmackMigration
                 {
                     b.HasOne("Omack.Data.Models.Group", "Group")
                         .WithMany()
-                        .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("GroupId");
 
                     b.HasOne("Omack.Data.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Omack.Data.Models.Transaction", b =>
                 {
                     b.HasOne("Omack.Data.Models.Group", "Group")
                         .WithMany()
-                        .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("GroupId");
 
                     b.HasOne("Omack.Data.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Omack.Data.Models.User", b =>

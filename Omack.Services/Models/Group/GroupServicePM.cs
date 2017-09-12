@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
-namespace Omack.Api.ViewModels
+namespace Omack.Services.Models.Group
 {
-    public class GroupVM
+    public class GroupServicePM
     {
         public int Id { get; set; }
         public string Name { get; set; }

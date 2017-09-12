@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <Compile Remove="ServiceImplementations\IdentityService.cs" />
+    <Compile Remove="ServiceImplementations\MediaService.cs" />
   </ItemGroup>
 
   <ItemGroup>

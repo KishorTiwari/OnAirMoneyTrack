@@ -18,7 +18,7 @@ namespace Omack.Data.Infrastructure.Repositories
         }
         public IQueryable<Group> GetAllGroupsByUserId(int userId)
         {
-            var groups = _context.Group.Where(x => x.Group_Users.All(y => y.UserId == userId && y.IsActive));
+            var groups = _context.Group.Where(x => x.Group_Users.All(y => y.UserId == userId && y.IsActive == true));
             return groups;
         }
 

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Omack.Api.ViewModels;
+using Omack.Api.ViewModels.Group;
 using Omack.Services.Services;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace Omack.Api.Controllers
             var result = _adminService.MakeGroupAdmin(userId, groupId, _currentUserId);
             if (result.IsSuccess)
             {
-                var groupVM = _mapper.Map<GroupVM>(result.Data);
+                var groupVM = _mapper.Map<GroupViewGM>(result.Data);
                 return Ok(groupVM);
             }
             else

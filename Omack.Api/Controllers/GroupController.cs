@@ -15,6 +15,9 @@ using AutoMapper;
 using Omack.Api.ViewModels;
 using Omack.Services.Models;
 using Omack.Api.Filters;
+using Omack.Api.ViewModels.Group;
+using Omack.Services.Models.Group;
+using Omack.Core.Models;
 
 namespace Omack.Api.Controllers
 {
@@ -23,14 +26,14 @@ namespace Omack.Api.Controllers
     public class GroupController : Controller
     {
         private IGroupService _groupService;
-        private int _currentUserId;
+        private CurrentUser _currentUser;
         private IHttpContextAccessor _context;
         private IMapper _mapper;
 
         public GroupController(IGroupService groupService, SiteUtils siteUtils, IHttpContextAccessor context, IMapper mapper)
         {
             _groupService = groupService;
-            _currentUserId = siteUtils.CurrentUser.Id;
+            _currentUser = siteUtils.CurrentUser;
             _context = context;
             _mapper = mapper;
         }
@@ -38,7 +41,7 @@ namespace Omack.Api.Controllers
         [HttpGet("{id:int:Min(1)}", Name = "GetGroupById")]
         public IActionResult GetGroupById(int id)
         {
-            var result = _groupService.GetById(id, _currentUserId);
+            var result = _groupService.GetById(id, _currentUser);
             if (result.IsSuccess)
             {
                 var group = result.Data;
@@ -50,10 +53,10 @@ namespace Omack.Api.Controllers
         [HttpGet()]
         public IActionResult GetGroupsByUserID()
         {
-            var result = _groupService.GetAll(_currentUserId);
+            var result = _groupService.GetAll(_currentUser);
             if (result.IsSuccess)
             {
-                var groupsVM = _mapper.Map<IList<GroupVM>>(result.Data);
+                var groupsVM = _mapper.Map<IList<GroupViewGM>>(result.Data);
                 return Ok(groupsVM);
             }
             return new StatusCodeResult(result.StatusCodes);
@@ -61,10 +64,10 @@ namespace Omack.Api.Controllers
 
         [HttpPost(Name = "CreateGroup")]
         [ValidateModel]
-        public IActionResult CreateGroup([FromBody]GroupVM groupVM)
+        public IActionResult CreateGroup([FromBody]GroupViewPM groupVM)
         {
-            var groupServiceModel = _mapper.Map<GroupServiceModel>(groupVM);
-            var result = _groupService.Add(groupServiceModel, _currentUserId);
+            var groupServiceModel = _mapper.Map<GroupServicePM>(groupVM);
+            var result = _groupService.Add(groupServiceModel, _currentUser);
             if (result.IsSuccess)
             {
                 return Ok(result.Data);

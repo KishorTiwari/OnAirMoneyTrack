@@ -16,5 +16,6 @@ namespace Omack.Core.Constants
                 return DateTime.UtcNow;
             }
         }
+        public static int DefaultMediaId { get; set; } = 2;
     }
 }
